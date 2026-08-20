@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Path Finder | Find Your Future</title>
 
 <style>
@@ -18,7 +19,7 @@
         color: #14213d;
     }
 
-    /* NAVBAR */
+    /* NAVIGATION */
     nav {
         height: 70px;
         background: #071936;
@@ -56,7 +57,7 @@
         font-weight: bold;
     }
 
-    /* HERO */
+    /* HERO SECTION */
     .hero {
         min-height: 560px;
         display: flex;
@@ -96,7 +97,7 @@
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        transition: .2s;
+        transition: 0.2s;
     }
 
     .primary-btn:hover {
@@ -113,7 +114,7 @@
         justify-content: center;
         align-items: center;
         font-size: 110px;
-        box-shadow: 0 20px 50px rgba(89, 65, 180, .18);
+        box-shadow: 0 20px 50px rgba(89, 65, 180, 0.18);
     }
 
     /* HOW IT WORKS */
@@ -138,7 +139,7 @@
         padding: 30px 20px;
         border-radius: 15px;
         text-align: center;
-        box-shadow: 0 5px 20px rgba(0,0,0,.07);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
     }
 
     .step-number {
@@ -175,7 +176,7 @@
         background: white;
         padding: 40px;
         border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0,0,0,.08);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     }
 
     .progress {
@@ -191,7 +192,7 @@
         width: 0%;
         background: #7651df;
         border-radius: 10px;
-        transition: .3s;
+        transition: 0.3s;
     }
 
     .question-number {
@@ -216,7 +217,7 @@
         border: 2px solid #e6e6ef;
         border-radius: 12px;
         cursor: pointer;
-        transition: .2s;
+        transition: 0.2s;
         background: white;
     }
 
@@ -282,7 +283,7 @@
         background: white;
         border-radius: 15px;
         padding: 25px;
-        box-shadow: 0 5px 20px rgba(0,0,0,.07);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
         border-top: 5px solid #7651df;
     }
 
@@ -330,7 +331,8 @@
         margin-bottom: 15px;
     }
 
-    footer p, footer a {
+    footer p,
+    footer a {
         color: #b9bfd1;
         text-decoration: none;
         line-height: 1.8;
@@ -342,10 +344,11 @@
         padding-top: 20px;
         border-top: 1px solid #263553;
         color: #8e97ae;
+        line-height: 1.8;
     }
 
-    /* MOBILE */
-    @media(max-width: 800px) {
+    /* MOBILE DESIGN */
+    @media (max-width: 800px) {
         nav a {
             display: none;
         }
@@ -378,7 +381,7 @@
         }
     }
 
-    @media(max-width: 500px) {
+    @media (max-width: 500px) {
         .steps {
             grid-template-columns: 1fr;
         }
@@ -387,29 +390,39 @@
             padding: 25px;
         }
     }
+
 </style>
 </head>
 
 <body>
 
 <!-- NAVIGATION -->
+
 <nav>
-    <div class="logo">✧ Path <span>Finder</span></div>
+
+    <div class="logo">
+        ✧ Path <span>Finder</span>
+    </div>
 
     <div>
         <a href="#home">Home</a>
         <a href="#how">How It Works</a>
         <a href="#results">Courses</a>
         <a href="#about">About Us</a>
-        <a href="#quiz" class="nav-btn">Get Started</a>
+        <a href="#quiz-section" class="nav-btn" onclick="startQuiz()">
+            Get Started
+        </a>
     </div>
+
 </nav>
 
 
-<!-- HERO -->
+<!-- HERO SECTION -->
+
 <section class="hero" id="home">
 
     <div class="hero-text">
+
         <h1>
             Discover the right course for your
             <span>future.</span>
@@ -428,6 +441,7 @@
         <p style="font-size:14px; margin-top:20px;">
             🛡️ Made especially for Year 9 students
         </p>
+
     </div>
 
     <div class="hero-art">
@@ -438,42 +452,56 @@
 
 
 <!-- HOW IT WORKS -->
+
 <section class="section" id="how">
 
-    <h2 class="section-title">How Path Finder Works</h2>
+    <h2 class="section-title">
+        How Path Finder Works
+    </h2>
 
     <div class="steps">
 
         <div class="step">
             <div class="step-number">1</div>
+
             <h3>Answer Questions</h3>
+
             <p>
                 Tell us about your interests,
                 career preferences and hobbies.
             </p>
         </div>
 
+
         <div class="step">
             <div class="step-number">2</div>
+
             <h3>Share Your Strengths</h3>
+
             <p>
                 Tell us which school subjects
                 you enjoy and perform well in.
             </p>
         </div>
 
+
         <div class="step">
             <div class="step-number">3</div>
+
             <h3>Get Matched</h3>
+
             <p>
                 Our matching system compares
                 your answers with career areas.
             </p>
         </div>
 
+
         <div class="step">
             <div class="step-number">4</div>
+
             <h3>Explore Your Path</h3>
+
             <p>
                 Discover possible courses,
                 careers and future pathways.
@@ -485,7 +513,8 @@
 </section>
 
 
-<!-- QUIZ -->
+<!-- QUIZ SECTION -->
+
 <section id="quiz-section">
 
     <div class="quiz-container">
@@ -505,6 +534,7 @@
         <div class="options" id="options"></div>
 
         <div class="quiz-buttons">
+
             <button class="secondary-btn" onclick="previousQuestion()">
                 ← Back
             </button>
@@ -512,6 +542,7 @@
             <button class="primary-btn" onclick="nextQuestion()">
                 Next →
             </button>
+
         </div>
 
     </div>
@@ -519,25 +550,31 @@
 </section>
 
 
-<!-- RESULTS -->
+<!-- RESULTS SECTION -->
+
 <section id="results">
 
     <div class="results-container">
 
         <div class="results-heading">
+
             <h2>Your Path Finder Results 🎯</h2>
+
             <p>
                 Based on your answers, these career areas could
                 be worth exploring.
             </p>
+
         </div>
 
         <div class="career-grid" id="careerGrid"></div>
 
         <div style="text-align:center; margin-top:40px;">
+
             <button class="primary-btn" onclick="restartQuiz()">
                 Take Quiz Again
             </button>
+
         </div>
 
     </div>
@@ -546,35 +583,64 @@
 
 
 <!-- FOOTER -->
+
 <footer id="about">
 
     <div class="footer-content">
 
         <div>
+
             <h2>✧ Path Finder</h2>
+
             <p>
                 Helping students discover their future.
             </p>
+
         </div>
 
+
         <div>
+
             <h3>Quick Links</h3>
+
             <p><a href="#home">Home</a></p>
+
             <p><a href="#how">How It Works</a></p>
-            <p><a href="#quiz">Career Quiz</a></p>
+
+            <p>
+                <a href="#quiz-section" onclick="startQuiz()">
+                    Career Quiz
+                </a>
+            </p>
+
         </div>
 
+
         <div>
+
             <h3>Support</h3>
+
             <p>FAQs</p>
+
             <p>Contact Us</p>
+
             <p>Privacy Policy</p>
+
         </div>
 
     </div>
 
+
+    <!-- CREDIT -->
+
     <div class="copyright">
+
         © 2026 Path Finder. All rights reserved.
+
+        <br>
+
+        <strong>Made by Jolaoluwa Ajibade</strong>
+
     </div>
 
 </footer>
@@ -687,6 +753,8 @@ const questions = [
 ];
 
 
+/* QUIZ VARIABLES */
+
 let currentQuestion = 0;
 let answers = [];
 
@@ -694,9 +762,7 @@ const quizSection = document.getElementById("quiz-section");
 const resultsSection = document.getElementById("results");
 
 
-/* =========================
-   START QUIZ
-========================= */
+/* START QUIZ */
 
 function startQuiz() {
 
@@ -707,6 +773,7 @@ function startQuiz() {
     resultsSection.style.display = "none";
 
     currentQuestion = 0;
+
     answers = [];
 
     showQuestion();
@@ -714,12 +781,11 @@ function startQuiz() {
     quizSection.scrollIntoView({
         behavior: "smooth"
     });
+
 }
 
 
-/* =========================
-   DISPLAY QUESTION
-========================= */
+/* SHOW QUESTION */
 
 function showQuestion() {
 
@@ -739,7 +805,7 @@ function showQuestion() {
 
     optionsContainer.innerHTML = "";
 
-    q.options.forEach((option, index) => {
+    q.options.forEach((option) => {
 
         const div = document.createElement("div");
 
@@ -754,22 +820,24 @@ function showQuestion() {
         div.onclick = function() {
 
             document.querySelectorAll(".option")
-                .forEach(el => el.classList.remove("selected"));
+                .forEach(el =>
+                    el.classList.remove("selected")
+                );
 
             div.classList.add("selected");
 
             answers[currentQuestion] = option[1];
+
         };
 
         optionsContainer.appendChild(div);
 
     });
+
 }
 
 
-/* =========================
-   NEXT QUESTION
-========================= */
+/* NEXT QUESTION */
 
 function nextQuestion() {
 
@@ -778,6 +846,7 @@ function nextQuestion() {
         alert("Please choose an answer before continuing.");
 
         return;
+
     }
 
     if (currentQuestion < questions.length - 1) {
@@ -791,12 +860,11 @@ function nextQuestion() {
         showResults();
 
     }
+
 }
 
 
-/* =========================
-   PREVIOUS QUESTION
-========================= */
+/* PREVIOUS QUESTION */
 
 function previousQuestion() {
 
@@ -807,12 +875,11 @@ function previousQuestion() {
         showQuestion();
 
     }
+
 }
 
 
-/* =========================
-   RESULTS
-========================= */
+/* SHOW RESULTS */
 
 function showResults() {
 
@@ -820,77 +887,118 @@ function showResults() {
 
     resultsSection.style.display = "block";
 
+
     const scores = {
+
         technology: 0,
         engineering: 0,
         health: 0,
         creative: 0,
         business: 0,
         science: 0
+
     };
+
 
     answers.forEach(answer => {
 
         if (scores[answer] !== undefined) {
+
             scores[answer]++;
+
         }
 
     });
 
+
     const careers = {
 
         technology: {
+
             name: "Information Technology",
+
             icon: "💻",
+
             description:
                 "You may enjoy programming, software development, cybersecurity, websites and digital technology."
+
         },
+
 
         engineering: {
+
             name: "Engineering",
+
             icon: "⚙️",
+
             description:
                 "Engineering could suit your problem-solving skills and interest in designing, building and improving things."
+
         },
+
 
         health: {
+
             name: "Medicine & Health",
+
             icon: "🩺",
+
             description:
                 "You may enjoy helping people and could explore medicine, nursing, pharmacy, physiotherapy and other health careers."
+
         },
+
 
         creative: {
+
             name: "Creative Arts & Design",
+
             icon: "🎨",
+
             description:
                 "Your creativity could lead toward graphic design, architecture, animation, media, fashion or other creative careers."
+
         },
+
 
         business: {
+
             name: "Business & Management",
+
             icon: "💼",
+
             description:
                 "You may enjoy leadership, organisation, money and entrepreneurship."
+
         },
 
+
         science: {
+
             name: "Science & Research",
+
             icon: "🔬",
+
             description:
                 "Your curiosity could lead toward biology, chemistry, physics, environmental science and research."
+
         }
 
     };
 
-    const sorted = Object.keys(scores)
-        .sort((a,b) => scores[b] - scores[a]);
 
-    const grid = document.getElementById("careerGrid");
+    const sorted = Object.keys(scores)
+        .sort((a, b) => scores[b] - scores[a]);
+
+
+    const grid =
+        document.getElementById("careerGrid");
+
 
     grid.innerHTML = "";
 
-    sorted.slice(0,3).forEach((career, index) => {
+
+    sorted.slice(0, 3).forEach((career, index) => {
 
         const data = careers[career];
 
@@ -909,11 +1017,55 @@ function showResults() {
             <p>${data.description}</p>
 
             <span class="match">
-                ${index === 0 ? "Best Match" :
-                  index === 1 ? "Strong Match" : "Good Match"}
+
+                ${
+                    index === 0
+                    ? "Best Match"
+                    : index === 1
+                    ? "Strong Match"
+                    : "Good Match"
+                }
+
             </span>
 
         `;
+
+        grid.appendChild(card);
+
+    });
+
+
+    resultsSection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* RESTART QUIZ */
+
+function restartQuiz() {
+
+    resultsSection.style.display = "none";
+
+    quizSection.style.display = "block";
+
+    currentQuestion = 0;
+
+    answers = [];
+
+    showQuestion();
+
+    quizSection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+</script>
+
+</body>
+</html>  `;
 
         grid.appendChild(card);
 
