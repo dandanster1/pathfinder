@@ -1067,6 +1067,16 @@
 
 </footer>
 
+<script>
+(function() {
+    const version = 'pathfinder-v2026-08-21-1';
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('v') !== version) {
+        url.searchParams.set('v', version);
+        window.location.replace(url.toString());
+    }
+})();
+</script>
 
 <script>
 
