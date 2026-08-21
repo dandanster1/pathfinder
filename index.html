@@ -372,6 +372,53 @@
         font-size: 17px;
     }
 
+    .insight-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+    }
+
+    .insight-card {
+        background: linear-gradient(135deg, #f4f0ff, #edf7ff);
+        border: 1px solid #e5ddff;
+        border-radius: 16px;
+        padding: 18px 20px;
+    }
+
+    .insight-card h4 {
+        font-size: 12px;
+        color: #5d6680;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+    }
+
+    .insight-card strong {
+        display: block;
+        font-size: 19px;
+        color: #1a1f36;
+        line-height: 1.4;
+    }
+
+    .action-row {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .soft-btn {
+        background: white;
+        border: 2px solid #7651df;
+        color: #7651df;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
     .career-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -978,6 +1025,13 @@
                 be worth exploring.
             </p>
 
+        </div>
+
+        <div class="insight-strip" id="insightStrip"></div>
+
+        <div class="action-row">
+            <button class="secondary-btn" id="reviewStudyGuideBtn" type="button">Review Study Guide</button>
+            <button class="soft-btn" id="resetProgressBtn" type="button">Reset Progress</button>
         </div>
 
         <div class="career-grid" id="careerGrid"></div>
@@ -3335,12 +3389,37 @@ function showResults() {
         });
     }
 
+    function renderInsightStrip(pathKey) {
+        const plan = programLookup[pathKey] || careers[pathKey];
+        const progress = getPathProgress(pathKey);
+        const completedWeeks = progress.completedWeeks || [];
+        const nextWeekIndex = completedWeeks.length;
+        const nextWeek = plan.program[Math.min(nextWeekIndex, plan.program.length - 1)];
+        const completionText = completedWeeks.length >= plan.program.length ? 'All weeks complete' : `Week ${completedWeeks.length + 1}: ${nextWeek.title}`;
+
+        document.getElementById("insightStrip").innerHTML = `
+            <div class="insight-card">
+                <h4>Career focus</h4>
+                <strong>${plan.name}</strong>
+            </div>
+            <div class="insight-card">
+                <h4>Next milestone</h4>
+                <strong>${completionText}</strong>
+            </div>
+            <div class="insight-card">
+                <h4>Progress</h4>
+                <strong>${completedWeeks.length}/${plan.program.length} weeks</strong>
+            </div>
+        `;
+    }
+
     function renderPathTrack(pathKey, plan) {
         const pathProgress = document.getElementById("pathProgress");
         const pathSteps = document.getElementById("pathSteps");
         const progress = getPathProgress(pathKey);
         const completedWeeks = progress.completedWeeks || [];
 
+        renderInsightStrip(pathKey);
         updateProgressDashboard(pathKey, plan.program);
 
         pathSteps.innerHTML = plan.program.map((week, index) => {
@@ -3479,6 +3558,26 @@ function showResults() {
             block: "nearest"
         });
     }
+
+    document.getElementById("reviewStudyGuideBtn").addEventListener("click", function () {
+        const firstOpenButton = document.querySelector(".week-toggle-btn");
+        if (firstOpenButton) {
+            firstOpenButton.click();
+        }
+        document.getElementById("pathPlan").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    document.getElementById("resetProgressBtn").addEventListener("click", function () {
+        if (!selectedCareer) return;
+
+        const agree = confirm("Reset your progress for this path? This will clear your completed weeks.");
+        if (!agree) return;
+
+        const currentProgress = getUserProgress();
+        delete currentProgress[selectedCareer];
+        saveUserProgress(currentProgress);
+        renderPathTrack(selectedCareer, careers[selectedCareer]);
+    });
 
     selectedCareer = topCareers[0];
     renderCareerCards();
