@@ -104,6 +104,10 @@
         margin-bottom: 22px;
     }
 
+    .auth-panel.hidden {
+        display: none;
+    }
+
     .auth-form {
         display: grid;
         gap: 16px;
@@ -849,8 +853,8 @@
         <a href="#results">Courses</a>
         <a href="#about">About Us</a>
         <span id="userStatus" class="user-pill" style="display:none;"></span>
-        <button id="navAuthBtn" class="nav-btn" type="button" onclick="openSignUpModal()">
-            Sign Up
+        <button id="navAuthBtn" class="nav-btn" type="button" onclick="openLoginModal()">
+            Log In
         </button>
     </div>
 
@@ -858,10 +862,10 @@
 
 <div id="authModal" class="auth-modal" aria-modal="true" role="dialog">
     <div class="auth-card">
-        <h2>Create Account</h2>
-        <p>Sign up to save your results and start your journey.</p>
+        <h2 id="authTitle">Create Account</h2>
+        <p id="authSubtitle">Sign up to save your results and start your journey.</p>
 
-        <form id="signupForm" class="auth-form">
+        <form id="signupForm" class="auth-form auth-panel">
             <input type="text" id="fullName" placeholder="Full name" required>
             <input type="email" id="email" placeholder="Email address" required>
             <input type="password" id="password" placeholder="Password" minlength="6" required>
@@ -873,6 +877,22 @@
                 <button type="submit" class="primary-btn">Sign Up</button>
             </div>
         </form>
+
+        <form id="loginForm" class="auth-form auth-panel hidden">
+            <input type="email" id="loginEmail" placeholder="Email address" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+
+            <div id="loginError" class="error-text"></div>
+
+            <div class="auth-actions">
+                <button type="button" class="ghost-btn" onclick="closeSignUpModal()">Cancel</button>
+                <button type="submit" class="primary-btn">Log In</button>
+            </div>
+        </form>
+
+        <button id="authModeToggle" type="button" class="ghost-btn" style="width: 100%; margin-top: 12px;" onclick="toggleAuthMode()">
+            Already have an account? Log In
+        </button>
     </div>
 </div>
 
@@ -1243,9 +1263,15 @@ const questions = [
 
 const authModal = document.getElementById("authModal");
 const signupForm = document.getElementById("signupForm");
+const loginForm = document.getElementById("loginForm");
 const authError = document.getElementById("authError");
+const loginError = document.getElementById("loginError");
+const authTitle = document.getElementById("authTitle");
+const authSubtitle = document.getElementById("authSubtitle");
+const authModeToggle = document.getElementById("authModeToggle");
 const navAuthBtn = document.getElementById("navAuthBtn");
 const userStatus = document.getElementById("userStatus");
+let currentAuthMode = "signup";
 
 function getUsers() {
     const users = localStorage.getItem("pathfinderUsers");
@@ -1269,17 +1295,52 @@ function clearCurrentUser() {
     localStorage.removeItem("pathfinderCurrentUser");
 }
 
-function openSignUpModal() {
+function setAuthMode(mode) {
+    currentAuthMode = mode;
+    const isSignup = mode === "signup";
+
+    signupForm.classList.toggle("hidden", !isSignup);
+    loginForm.classList.toggle("hidden", isSignup);
+
+    authTitle.textContent = isSignup ? "Create Account" : "Welcome Back";
+    authSubtitle.textContent = isSignup
+        ? "Sign up to save your results and start your journey."
+        : "Log in to continue your learning journey.";
+
+    authModeToggle.textContent = isSignup
+        ? "Already have an account? Log In"
+        : "Need an account? Sign Up";
+
     authError.classList.remove("show");
     authError.textContent = "";
+    loginError.classList.remove("show");
+    loginError.textContent = "";
+    signupForm.reset();
+    loginForm.reset();
+}
+
+function openSignUpModal() {
+    setAuthMode("signup");
     authModal.classList.add("show");
+}
+
+function openLoginModal() {
+    setAuthMode("login");
+    authModal.classList.add("show");
+}
+
+function toggleAuthMode() {
+    setAuthMode(currentAuthMode === "signup" ? "login" : "signup");
 }
 
 function closeSignUpModal() {
     authModal.classList.remove("show");
     signupForm.reset();
+    loginForm.reset();
     authError.classList.remove("show");
     authError.textContent = "";
+    loginError.classList.remove("show");
+    loginError.textContent = "";
 }
 
 function updateAuthUI() {
@@ -1293,8 +1354,8 @@ function updateAuthUI() {
     } else {
         userStatus.style.display = "none";
         userStatus.textContent = "";
-        navAuthBtn.textContent = "Sign Up";
-        navAuthBtn.setAttribute("onclick", "openSignUpModal()" );
+        navAuthBtn.textContent = "Log In";
+        navAuthBtn.setAttribute("onclick", "openLoginModal()" );
     }
 }
 
@@ -1347,6 +1408,33 @@ signupForm.addEventListener("submit", function(event) {
     alert("Sign up successful! You can now start the quiz.");
 });
 
+loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    if (!email || !password) {
+        loginError.textContent = "Please enter your email and password.";
+        loginError.classList.add("show");
+        return;
+    }
+
+    const users = getUsers();
+    const matchedUser = users.find(user => user.email === email && user.password === password);
+
+    if (!matchedUser) {
+        loginError.textContent = "Incorrect email or password.";
+        loginError.classList.add("show");
+        return;
+    }
+
+    setCurrentUser({ name: matchedUser.name, email: matchedUser.email });
+    closeSignUpModal();
+    updateAuthUI();
+    alert(`Welcome back, ${matchedUser.name}!`);
+});
+
 /* QUIZ VARIABLES */
 
 let currentQuestion = 0;
@@ -1361,7 +1449,7 @@ const resultsSection = document.getElementById("results");
 function startQuiz() {
 
     if (!getCurrentUser()) {
-        openSignUpModal();
+        openLoginModal();
         return;
     }
 
