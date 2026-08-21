@@ -1,0 +1,3509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Path Finder | Find Your Future</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        background: #f7f7ff;
+        color: #14213d;
+    }
+
+    /* NAVIGATION */
+    nav {
+        height: 70px;
+        background: #071936;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 7%;
+    }
+
+    .logo {
+        font-size: 27px;
+        font-weight: bold;
+    }
+
+    .logo span {
+        color: #8667ed;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 30px;
+        font-size: 15px;
+    }
+
+    nav a:hover {
+        color: #a48cff;
+    }
+
+    .nav-btn {
+        background: #7651df;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .user-pill {
+        background: rgba(134, 103, 237, 0.16);
+        color: white;
+        padding: 10px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 15px;
+    }
+
+    .auth-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(7, 25, 54, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .auth-modal.show {
+        display: flex;
+    }
+
+    .auth-card {
+        width: min(100%, 460px);
+        background: white;
+        border-radius: 18px;
+        padding: 30px 28px;
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+    }
+
+    .auth-card h2 {
+        margin-bottom: 8px;
+        font-size: 30px;
+    }
+
+    .auth-card p {
+        color: #687086;
+        margin-bottom: 22px;
+    }
+
+    .auth-form {
+        display: grid;
+        gap: 16px;
+    }
+
+    .auth-form input {
+        width: 100%;
+        padding: 14px 15px;
+        border: 1.5px solid #e1e3ed;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+
+    .auth-form input:focus {
+        outline: none;
+        border-color: #7651df;
+        box-shadow: 0 0 0 4px rgba(118, 81, 223, 0.12);
+    }
+
+    .auth-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .auth-actions button {
+        flex: 1;
+    }
+
+    .ghost-btn {
+        background: white;
+        border: 2px solid #7651df;
+        color: #7651df;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .error-text {
+        display: none;
+        color: #c0392b;
+        font-size: 14px;
+        margin-top: -6px;
+    }
+
+    .error-text.show {
+        display: block;
+    }
+
+    /* HERO SECTION */
+    .hero {
+        min-height: 560px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 70px 8%;
+        background: linear-gradient(120deg, #ffffff, #f2f0ff);
+    }
+
+    .hero-text {
+        max-width: 560px;
+    }
+
+    .hero h1 {
+        font-size: 55px;
+        line-height: 1.05;
+        margin-bottom: 25px;
+    }
+
+    .hero h1 span {
+        color: #7651df;
+    }
+
+    .hero p {
+        color: #5d6680;
+        font-size: 19px;
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    .primary-btn {
+        border: none;
+        background: #7651df;
+        color: white;
+        padding: 16px 28px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .primary-btn:hover {
+        transform: translateY(-2px);
+        background: #6440ce;
+    }
+
+    .hero-art {
+        width: 430px;
+        height: 360px;
+        border-radius: 30px;
+        background: linear-gradient(135deg, #ded6ff, #bcb0ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 110px;
+        box-shadow: 0 20px 50px rgba(89, 65, 180, 0.18);
+    }
+
+    /* HOW IT WORKS */
+    .section {
+        padding: 70px 8%;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 45px;
+    }
+
+    .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+
+    .step {
+        background: white;
+        padding: 30px 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    .step-number {
+        width: 42px;
+        height: 42px;
+        background: #7651df;
+        color: white;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .step h3 {
+        margin-bottom: 10px;
+    }
+
+    .step p {
+        color: #6c748a;
+        line-height: 1.5;
+    }
+
+    /* QUIZ */
+    #quiz-section {
+        display: none;
+        padding: 60px 8%;
+    }
+
+    .quiz-container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .progress {
+        width: 100%;
+        height: 8px;
+        background: #e5e5f0;
+        border-radius: 10px;
+        margin: 20px 0 40px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #7651df;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    .question-number {
+        color: #7651df;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .question {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .option {
+        padding: 20px;
+        border: 2px solid #e6e6ef;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+        background: white;
+    }
+
+    .option:hover {
+        border-color: #7651df;
+        background: #f7f4ff;
+    }
+
+    .option.selected {
+        border-color: #7651df;
+        background: #eeeaff;
+    }
+
+    .quiz-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 35px;
+    }
+
+    .secondary-btn {
+        padding: 13px 25px;
+        border: 2px solid #7651df;
+        color: #7651df;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* RESULTS */
+    #results {
+        display: none;
+        padding: 70px 8%;
+    }
+
+    .results-container {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .results-heading {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .results-heading h2 {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .results-heading p {
+        color: #687086;
+        font-size: 17px;
+    }
+
+    .career-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .career-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+        border-top: 5px solid #7651df;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .career-card.selected {
+        border-top-color: #198754;
+        box-shadow: 0 8px 24px rgba(25, 135, 84, 0.18);
+    }
+
+    .career-icon {
+        font-size: 45px;
+        margin-bottom: 5px;
+    }
+
+    .career-card h3 {
+        margin-bottom: 0;
+    }
+
+    .career-card p {
+        color: #687086;
+        line-height: 1.5;
+        margin-bottom: 0;
+    }
+
+    .match {
+        display: inline-block;
+        background: #e5f8ed;
+        color: #198754;
+        padding: 7px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .path-select-btn {
+        margin-top: auto;
+        border: none;
+        background: #f0ebff;
+        color: #4228a3;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .path-select-btn:hover {
+        background: #e1d8ff;
+    }
+
+    .path-select-btn.selected {
+        background: #198754;
+        color: white;
+    }
+
+    .path-plan {
+        display: none;
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        margin-top: 35px;
+    }
+
+    .plan-header {
+        margin-bottom: 25px;
+    }
+
+    .plan-header h3 {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .plan-header p {
+        color: #687086;
+        line-height: 1.6;
+    }
+
+    .path-steps {
+        display: grid;
+        gap: 18px;
+    }
+
+    .path-progress {
+        background: linear-gradient(135deg, #f4f0ff, #eef6ff);
+        border: 1px solid #e2dcff;
+        border-radius: 18px;
+        padding: 22px 20px;
+        margin-bottom: 22px;
+    }
+
+    .progress-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 14px;
+    }
+
+    .progress-top h4 {
+        font-size: 24px;
+    }
+
+    .progress-badge {
+        background: #7651df;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .progress-bar-track {
+        width: 100%;
+        height: 12px;
+        background: #e4e0f6;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #7651df, #52b788);
+        border-radius: inherit;
+        width: 0%;
+        transition: 0.3s ease;
+    }
+
+    .progress-meta {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        color: #4f5e7d;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .week-card {
+        background: #faf9ff;
+        border: 1px solid #ece7ff;
+        border-radius: 18px;
+        overflow: hidden;
+        transition: 0.2s ease;
+    }
+
+    .week-card.locked {
+        opacity: 0.75;
+    }
+
+    .week-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 20px;
+        background: linear-gradient(135deg, #f4f0ff, #eef6ff);
+        border-bottom: 1px solid #e8e0ff;
+    }
+
+    .week-pill {
+        display: inline-block;
+        margin-bottom: 8px;
+        background: #7651df;
+        color: white;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .week-header h4 {
+        font-size: 22px;
+        margin-bottom: 0;
+    }
+
+    .week-toggle-btn {
+        border: none;
+        background: #7651df;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .week-content {
+        display: block;
+        padding: 20px;
+    }
+
+    .week-content.hidden {
+        display: none;
+    }
+
+    .week-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 18px;
+    }
+
+    .week-panel {
+        background: white;
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid #efebff;
+    }
+
+    .week-panel h5 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #1d1d35;
+    }
+
+    .week-panel ul {
+        list-style: none;
+        display: grid;
+        gap: 10px;
+    }
+
+    .week-panel li {
+        color: #58627b;
+        line-height: 1.5;
+        position: relative;
+        padding-left: 18px;
+    }
+
+    .week-panel li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #7651df;
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .study-guide,
+    .recommendations {
+        margin-top: 12px;
+    }
+
+    .study-guide h5,
+    .recommendations h5 {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .study-guide ul,
+    .recommendations ul {
+        list-style: none;
+        display: grid;
+        gap: 8px;
+        background: #f8f7ff;
+        border-radius: 12px;
+        padding: 14px 16px;
+    }
+
+    .quiz-block {
+        margin-top: 20px;
+        border-top: 1px solid #e9e3ff;
+        padding-top: 18px;
+    }
+
+    .quiz-block h5 {
+        margin-bottom: 14px;
+        font-size: 18px;
+    }
+
+    .quiz-question {
+        background: white;
+        border: 1px solid #efeaff;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 14px;
+    }
+
+    .quiz-question p {
+        margin-bottom: 12px;
+        font-weight: bold;
+        color: #1f2240;
+    }
+
+    .quiz-options {
+        display: grid;
+        gap: 10px;
+    }
+
+    .quiz-option {
+        text-align: left;
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ded8ff;
+        border-radius: 10px;
+        background: #faf8ff;
+        cursor: pointer;
+        color: #24314d;
+    }
+
+    .quiz-option.correct {
+        background: #e8fff1;
+        border-color: #34c37a;
+        color: #0d6b42;
+    }
+
+    .quiz-option.wrong {
+        background: #fff2f2;
+        border-color: #f3a4a4;
+        color: #9b2c2c;
+    }
+
+    .quiz-feedback {
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #2c3550;
+    }
+
+    /* FOOTER */
+    footer {
+        background: #071936;
+        color: white;
+        padding: 45px 8%;
+        margin-top: 50px;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    footer h3 {
+        margin-bottom: 15px;
+    }
+
+    footer p,
+    footer a {
+        color: #b9bfd1;
+        text-decoration: none;
+        line-height: 1.8;
+    }
+
+    .copyright {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #263553;
+        color: #8e97ae;
+        line-height: 1.8;
+    }
+
+    /* MOBILE DESIGN */
+    @media (max-width: 800px) {
+        nav a {
+            display: none;
+        }
+
+        .hero {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+        }
+
+        .hero-art {
+            margin-top: 40px;
+            width: 300px;
+            height: 250px;
+        }
+
+        .steps {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .career-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .steps {
+            grid-template-columns: 1fr;
+        }
+
+        .quiz-container {
+            padding: 25px;
+        }
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <div class="logo">
+        ✧ Path <span>Finder</span>
+    </div>
+
+    <div>
+        <a href="#home">Home</a>
+        <a href="#how">How It Works</a>
+        <a href="#results">Courses</a>
+        <a href="#about">About Us</a>
+        <span id="userStatus" class="user-pill" style="display:none;"></span>
+        <button id="navAuthBtn" class="nav-btn" type="button" onclick="openSignUpModal()">
+            Sign Up
+        </button>
+    </div>
+
+</nav>
+
+<div id="authModal" class="auth-modal" aria-modal="true" role="dialog">
+    <div class="auth-card">
+        <h2>Create Account</h2>
+        <p>Sign up to save your results and start your journey.</p>
+
+        <form id="signupForm" class="auth-form">
+            <input type="text" id="fullName" placeholder="Full name" required>
+            <input type="email" id="email" placeholder="Email address" required>
+            <input type="password" id="password" placeholder="Password" minlength="6" required>
+
+            <div id="authError" class="error-text"></div>
+
+            <div class="auth-actions">
+                <button type="button" class="ghost-btn" onclick="closeSignUpModal()">Cancel</button>
+                <button type="submit" class="primary-btn">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- HERO SECTION -->
+
+<section class="hero" id="home">
+
+    <div class="hero-text">
+
+        <h1>
+            Discover the right course for your
+            <span>future.</span>
+        </h1>
+
+        <p>
+            Path Finder helps Year 9 students discover careers
+            and courses that match their interests, strengths,
+            personality and favourite subjects.
+        </p>
+
+        <button class="primary-btn" onclick="startQuiz()">
+            Start Your Journey →
+        </button>
+
+        <p style="font-size:14px; margin-top:20px;">
+            🛡️ Made especially for Year 9 students
+        </p>
+
+    </div>
+
+    <div class="hero-art">
+        🧑‍🎓
+    </div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+
+<section class="section" id="how">
+
+    <h2 class="section-title">
+        How Path Finder Works
+    </h2>
+
+    <div class="steps">
+
+        <div class="step">
+            <div class="step-number">1</div>
+
+            <h3>Answer Questions</h3>
+
+            <p>
+                Tell us about your interests,
+                career preferences and hobbies.
+            </p>
+        </div>
+
+
+        <div class="step">
+            <div class="step-number">2</div>
+
+            <h3>Share Your Strengths</h3>
+
+            <p>
+                Tell us which school subjects
+                you enjoy and perform well in.
+            </p>
+        </div>
+
+
+        <div class="step">
+            <div class="step-number">3</div>
+
+            <h3>Get Matched</h3>
+
+            <p>
+                Our matching system compares
+                your answers with career areas.
+            </p>
+        </div>
+
+
+        <div class="step">
+            <div class="step-number">4</div>
+
+            <h3>Explore Your Path</h3>
+
+            <p>
+                Discover possible courses,
+                careers and future pathways.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- QUIZ SECTION -->
+
+<section id="quiz-section">
+
+    <div class="quiz-container">
+
+        <div class="question-number" id="questionNumber">
+            Question 1 of 8
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <h2 class="question" id="question">
+            Loading...
+        </h2>
+
+        <div class="options" id="options"></div>
+
+        <div class="quiz-buttons">
+
+            <button class="secondary-btn" onclick="previousQuestion()">
+                ← Back
+            </button>
+
+            <button class="primary-btn" onclick="nextQuestion()">
+                Next →
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- RESULTS SECTION -->
+
+<section id="results">
+
+    <div class="results-container">
+
+        <div class="results-heading">
+
+            <h2>Your Path Finder Results 🎯</h2>
+
+            <p>
+                Based on your answers, these career areas could
+                be worth exploring.
+            </p>
+
+        </div>
+
+        <div class="career-grid" id="careerGrid"></div>
+
+        <div class="path-plan" id="pathPlan">
+            <div class="plan-header">
+                <h3 id="selectedPathName">Your Path Plan</h3>
+                <p id="selectedPathSummary"></p>
+            </div>
+            <div class="path-progress" id="pathProgress"></div>
+            <div class="path-steps" id="pathSteps"></div>
+        </div>
+
+        <div style="text-align:center; margin-top:40px;">
+
+            <button class="primary-btn" onclick="restartQuiz()">
+                Take Quiz Again
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer id="about">
+
+    <div class="footer-content">
+
+        <div>
+
+            <h2>✧ Path Finder</h2>
+
+            <p>
+                Helping students discover their future.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h3>Quick Links</h3>
+
+            <p><a href="#home">Home</a></p>
+
+            <p><a href="#how">How It Works</a></p>
+
+            <p>
+                <a href="#quiz-section" onclick="startQuiz()">
+                    Career Quiz
+                </a>
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h3>Support</h3>
+
+            <p>FAQs</p>
+
+            <p>Contact Us</p>
+
+            <p>Privacy Policy</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREDIT -->
+
+    <div class="copyright">
+
+        © 2026 Path Finder. All rights reserved.
+
+        <br>
+
+        <strong>Made by Jolaoluwa Ajibade</strong>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+/* =========================
+   QUIZ QUESTIONS
+========================= */
+
+const questions = [
+
+    {
+        question: "Which subject do you enjoy the most?",
+        options: [
+            ["Mathematics", "engineering"],
+            ["Science", "health"],
+            ["English", "creative"],
+            ["Computer Science / ICT", "technology"],
+            ["Business Studies", "business"],
+            ["Art / Design", "creative"]
+        ]
+    },
+
+    {
+        question: "Which activity sounds most interesting to you?",
+        options: [
+            ["Helping people", "health"],
+            ["Building or fixing things", "engineering"],
+            ["Using computers", "technology"],
+            ["Creating designs", "creative"],
+            ["Starting a business", "business"],
+            ["Investigating how things work", "science"]
+        ]
+    },
+
+    {
+        question: "What are you naturally good at?",
+        options: [
+            ["Solving difficult problems", "engineering"],
+            ["Explaining ideas", "creative"],
+            ["Working with technology", "technology"],
+            ["Understanding people", "health"],
+            ["Organising things", "business"],
+            ["Analysing information", "science"]
+        ]
+    },
+
+    {
+        question: "What type of work would you prefer?",
+        options: [
+            ["Working with people", "health"],
+            ["Working with computers", "technology"],
+            ["Working with numbers", "business"],
+            ["Designing and creating", "creative"],
+            ["Building things", "engineering"],
+            ["Researching and discovering", "science"]
+        ]
+    },
+
+    {
+        question: "Which problem would you most enjoy solving?",
+        options: [
+            ["Designing a new machine", "engineering"],
+            ["Helping someone get healthier", "health"],
+            ["Creating a new app", "technology"],
+            ["Designing a poster or product", "creative"],
+            ["Making a company more successful", "business"],
+            ["Discovering why something happens", "science"]
+        ]
+    },
+
+    {
+        question: "Which environment sounds best to you?",
+        options: [
+            ["Hospital or clinic", "health"],
+            ["Technology company", "technology"],
+            ["Office or company", "business"],
+            ["Design studio", "creative"],
+            ["Laboratory", "science"],
+            ["Workshop or engineering site", "engineering"]
+        ]
+    },
+
+    {
+        question: "Which skill would you most like to develop?",
+        options: [
+            ["Programming", "technology"],
+            ["Leadership", "business"],
+            ["Creativity", "creative"],
+            ["Scientific thinking", "science"],
+            ["Problem solving", "engineering"],
+            ["Communication and empathy", "health"]
+        ]
+    },
+
+    {
+        question: "What would make you feel most proud?",
+        options: [
+            ["Inventing something useful", "engineering"],
+            ["Helping someone's life", "health"],
+            ["Creating technology people use", "technology"],
+            ["Creating something people love", "creative"],
+            ["Building a successful company", "business"],
+            ["Making a scientific discovery", "science"]
+        ]
+    }
+
+];
+
+
+/* SIGN UP SYSTEM */
+
+const authModal = document.getElementById("authModal");
+const signupForm = document.getElementById("signupForm");
+const authError = document.getElementById("authError");
+const navAuthBtn = document.getElementById("navAuthBtn");
+const userStatus = document.getElementById("userStatus");
+
+function getUsers() {
+    const users = localStorage.getItem("pathfinderUsers");
+    return users ? JSON.parse(users) : [];
+}
+
+function saveUsers(users) {
+    localStorage.setItem("pathfinderUsers", JSON.stringify(users));
+}
+
+function getCurrentUser() {
+    const currentUser = localStorage.getItem("pathfinderCurrentUser");
+    return currentUser ? JSON.parse(currentUser) : null;
+}
+
+function setCurrentUser(user) {
+    localStorage.setItem("pathfinderCurrentUser", JSON.stringify(user));
+}
+
+function clearCurrentUser() {
+    localStorage.removeItem("pathfinderCurrentUser");
+}
+
+function openSignUpModal() {
+    authError.classList.remove("show");
+    authError.textContent = "";
+    authModal.classList.add("show");
+}
+
+function closeSignUpModal() {
+    authModal.classList.remove("show");
+    signupForm.reset();
+    authError.classList.remove("show");
+    authError.textContent = "";
+}
+
+function updateAuthUI() {
+    const currentUser = getCurrentUser();
+
+    if (currentUser) {
+        userStatus.textContent = `Hi, ${currentUser.name}`;
+        userStatus.style.display = "inline-block";
+        navAuthBtn.textContent = "Log Out";
+        navAuthBtn.setAttribute("onclick", "logoutUser()" );
+    } else {
+        userStatus.style.display = "none";
+        userStatus.textContent = "";
+        navAuthBtn.textContent = "Sign Up";
+        navAuthBtn.setAttribute("onclick", "openSignUpModal()" );
+    }
+}
+
+function logoutUser() {
+    clearCurrentUser();
+    updateAuthUI();
+    alert("You have been logged out.");
+}
+
+signupForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!name || !email || !password) {
+        authError.textContent = "Please complete all fields.";
+        authError.classList.add("show");
+        return;
+    }
+
+    if (password.length < 6) {
+        authError.textContent = "Password must be at least 6 characters long.";
+        authError.classList.add("show");
+        return;
+    }
+
+    const users = getUsers();
+    const existingUser = users.find(user => user.email.toLowerCase() === email.toLowerCase());
+
+    if (existingUser) {
+        authError.textContent = "An account with this email already exists.";
+        authError.classList.add("show");
+        return;
+    }
+
+    const newUser = {
+        name,
+        email: email.toLowerCase(),
+        password
+    };
+
+    users.push(newUser);
+    saveUsers(users);
+    setCurrentUser({ name, email: email.toLowerCase() });
+
+    closeSignUpModal();
+    updateAuthUI();
+    alert("Sign up successful! You can now start the quiz.");
+});
+
+/* QUIZ VARIABLES */
+
+let currentQuestion = 0;
+let answers = [];
+
+const quizSection = document.getElementById("quiz-section");
+const resultsSection = document.getElementById("results");
+
+
+/* START QUIZ */
+
+function startQuiz() {
+
+    if (!getCurrentUser()) {
+        openSignUpModal();
+        return;
+    }
+
+    document.getElementById("how").style.display = "none";
+
+    quizSection.style.display = "block";
+
+    resultsSection.style.display = "none";
+
+    currentQuestion = 0;
+
+    answers = [];
+
+    showQuestion();
+
+    quizSection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* SHOW QUESTION */
+
+function showQuestion() {
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("questionNumber").textContent =
+        `Question ${currentQuestion + 1} of ${questions.length}`;
+
+    document.getElementById("question").textContent =
+        q.question;
+
+    document.getElementById("progressBar").style.width =
+        ((currentQuestion + 1) / questions.length * 100) + "%";
+
+    const optionsContainer =
+        document.getElementById("options");
+
+    optionsContainer.innerHTML = "";
+
+    q.options.forEach((option) => {
+
+        const div = document.createElement("div");
+
+        div.className = "option";
+
+        div.textContent = option[0];
+
+        if (answers[currentQuestion] === option[1]) {
+            div.classList.add("selected");
+        }
+
+        div.onclick = function() {
+
+            document.querySelectorAll(".option")
+                .forEach(el =>
+                    el.classList.remove("selected")
+                );
+
+            div.classList.add("selected");
+
+            answers[currentQuestion] = option[1];
+
+        };
+
+        optionsContainer.appendChild(div);
+
+    });
+
+}
+
+
+/* NEXT QUESTION */
+
+function nextQuestion() {
+
+    if (!answers[currentQuestion]) {
+
+        alert("Please choose an answer before continuing.");
+
+        return;
+
+    }
+
+    if (currentQuestion < questions.length - 1) {
+
+        currentQuestion++;
+
+        showQuestion();
+
+    } else {
+
+        showResults();
+
+    }
+
+}
+
+
+/* PREVIOUS QUESTION */
+
+function previousQuestion() {
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        showQuestion();
+
+    }
+
+}
+
+
+/* SHOW RESULTS */
+
+function showResults() {
+
+    quizSection.style.display = "none";
+
+    resultsSection.style.display = "block";
+
+
+    const scores = {
+
+        technology: 0,
+        engineering: 0,
+        health: 0,
+        creative: 0,
+        business: 0,
+        science: 0
+
+    };
+
+
+    answers.forEach(answer => {
+
+        if (scores[answer] !== undefined) {
+
+            scores[answer]++;
+
+        }
+
+    });
+
+
+    function getUserProgress() {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return {};
+
+        const saved = localStorage.getItem(`pathfinderProgress_${currentUser.email}`);
+        return saved ? JSON.parse(saved) : {};
+    }
+
+    function saveUserProgress(progress) {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return;
+        localStorage.setItem(`pathfinderProgress_${currentUser.email}`, JSON.stringify(progress));
+    }
+
+    function getPathProgress(pathKey) {
+        const progress = getUserProgress();
+        return progress[pathKey] || { completedWeeks: [] };
+    }
+
+    function savePathProgress(pathKey, pathProgress) {
+        const progress = getUserProgress();
+        progress[pathKey] = pathProgress;
+        saveUserProgress(progress);
+    }
+
+    function updateProgressDashboard(pathKey, program) {
+        const progress = getPathProgress(pathKey);
+        const completedWeeks = progress.completedWeeks || [];
+        const totalWeeks = program.length;
+        const completedCount = completedWeeks.length;
+        const percentage = totalWeeks ? Math.round((completedCount / totalWeeks) * 100) : 0;
+
+        const wrapper = document.getElementById("pathProgress");
+        wrapper.innerHTML = `
+            <div class="progress-top">
+                <h4>Progress Tracker</h4>
+                <span class="progress-badge">${completedCount}/${totalWeeks} weeks</span>
+            </div>
+            <div class="progress-bar-track">
+                <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+            </div>
+            <div class="progress-meta">
+                <span>${percentage}% complete</span>
+                <span>Next unlock: ${completedCount >= totalWeeks ? 'All weeks complete' : `Week ${Math.min(completedCount + 1, totalWeeks)}`}</span>
+            </div>
+        `;
+    }
+
+    function toggleWeekCompletion(pathKey, weekNumber) {
+        const progress = getPathProgress(pathKey);
+        const completedWeeks = progress.completedWeeks || [];
+
+        if (completedWeeks.includes(weekNumber)) {
+            progress.completedWeeks = completedWeeks.filter(item => item !== weekNumber);
+        } else {
+            const targetIndex = programLookup[pathKey].program.findIndex(item => item.week === weekNumber);
+            const previousWeek = targetIndex > 0 ? programLookup[pathKey].program[targetIndex - 1].week : null;
+
+            if (previousWeek && !completedWeeks.includes(previousWeek)) {
+                alert(`Complete Week ${previousWeek} before unlocking Week ${weekNumber}.`);
+                return;
+            }
+
+            progress.completedWeeks = [...completedWeeks, weekNumber].sort((a, b) => a - b);
+        }
+
+        savePathProgress(pathKey, progress);
+        renderPathTrack(pathKey, programLookup[pathKey]);
+    }
+
+    const programLookup = {};
+
+    const careers = {
+
+        technology: {
+            name: "Information Technology",
+            icon: "💻",
+            description: "You may enjoy programming, software development, cybersecurity, websites and digital technology.",
+            summary: "This path is ideal if you enjoy digital problem-solving, creating apps, websites, and systems that people use every day.",
+            program: [
+                {
+                    week: 1,
+                    title: "Digital Foundations",
+                    focus: "Build confidence with technology and problem-solving",
+                    goals: [
+                        "Use everyday software confidently",
+                        "Understand how digital systems work",
+                        "Practice basic problem solving with logic"
+                    ],
+                    tasks: [
+                        "Complete a beginner digital skills task using word processing, spreadsheets, and presentation tools",
+                        "Learn the difference between hardware, software, apps, and data",
+                        "Try a small coding activity using a beginner platform"
+                    ],
+                    learn: [
+                        "How computers and digital systems work",
+                        "How to organise files and information clearly",
+                        "Basic logic patterns used in coding and design"
+                    ],
+                    recommendations: [
+                        "Use beginner coding platforms like Code.org, Khan Academy, or Scratch",
+                        "Practise keyboard shortcuts and spreadsheet basics",
+                        "Create a short digital project such as a simple poster, slideshow, or quiz"
+                    ],
+                    studyGuide: [
+                        "Review basic computer parts and what they do",
+                        "Learn how data is saved, shared, and used in apps",
+                        "Practice one small project each week to build confidence"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is the main purpose of a spreadsheet?",
+                            options: ["To create music", "To organise and calculate data", "To write stories", "To edit photos"],
+                            answer: "To organise and calculate data"
+                        },
+                        {
+                            question: "Which skill is most useful in IT problem solving?",
+                            options: ["Creativity", "Logical thinking", "Swimming", "Drawing"],
+                            answer: "Logical thinking"
+                        },
+                        {
+                            question: "What does software do?",
+                            options: ["It powers the internet only", "It tells the computer what tasks to perform", "It is the same as a mouse", "It stores electricity"],
+                            answer: "It tells the computer what tasks to perform"
+                        }
+                    ]
+                },
+                {
+                    week: 2,
+                    title: "Coding and Logic",
+                    focus: "Start thinking like a developer",
+                    goals: [
+                        "Understand sequence, loops, and decisions",
+                        "Build a mini digital challenge",
+                        "Improve patience and debugging skills"
+                    ],
+                    tasks: [
+                        "Create a simple animation or game using a visual coding tool",
+                        "Write a short algorithm for a daily routine or game",
+                        "Fix simple bugs in a code sample"
+                    ],
+                    learn: [
+                        "How coding follows steps in order",
+                        "The difference between a loop and a decision",
+                        "How to test and improve your work"
+                    ],
+                    recommendations: [
+                        "Use a visual coding app to build small exercises",
+                        "Keep a notebook of bugs you fixed and what you learned",
+                        "Try basic programming tasks before moving to more complex ones"
+                    ],
+                    studyGuide: [
+                        "Practice writing step-by-step instructions",
+                        "Review how loops save time in repeated tasks",
+                        "Compare simple coding examples to real-life systems"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does a loop do in programming?",
+                            options: ["Stops a program", "Repeats a set of instructions", "Deletes files", "Prints paper"],
+                            answer: "Repeats a set of instructions"
+                        },
+                        {
+                            question: "What is debugging?",
+                            options: ["Cleaning a computer", "Finding and fixing errors in code", "Turning off Wi-Fi", "Restarting the whole day"],
+                            answer: "Finding and fixing errors in code"
+                        },
+                        {
+                            question: "Why are clear steps important in coding?",
+                            options: ["So the code can run correctly", "Because computers dislike creativity", "Because it makes the screen louder", "Because code must be visible"],
+                            answer: "So the code can run correctly"
+                        }
+                    ]
+                },
+                {
+                    week: 3,
+                    title: "Designing Solutions",
+                    focus: "Apply tech to real problems",
+                    goals: [
+                        "Identify problems that technology can solve",
+                        "Plan a small digital product",
+                        "Use design thinking to improve ideas"
+                    ],
+                    tasks: [
+                        "Brainstorm a problem you want to solve at school or at home",
+                        "Design a simple app or website idea",
+                        "Create a mood board or wireframe for the product"
+                    ],
+                    learn: [
+                        "How ideas become digital solutions",
+                        "Why testing and feedback matter",
+                        "How user needs shape design choices"
+                    ],
+                    recommendations: [
+                        "Explore app or website design ideas through simple planning templates",
+                        "Ask for feedback from classmates or family",
+                        "Keep your ideas simple, useful, and clear"
+                    ],
+                    studyGuide: [
+                        "Learn how to define a problem before solving it",
+                        "Practice drawing simple mock-ups and layouts",
+                        "Review how good design improves user experience"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is the first step in solving a tech problem?",
+                            options: ["Write code immediately", "Understand the problem clearly", "Buy expensive tools", "Ignore user needs"],
+                            answer: "Understand the problem clearly"
+                        },
+                        {
+                            question: "Why is feedback useful in design?",
+                            options: ["It makes a project bigger", "It helps improve the product", "It removes all mistakes", "It replaces planning"],
+                            answer: "It helps improve the product"
+                        },
+                        {
+                            question: "What does a wireframe show?",
+                            options: ["The final code only", "The basic structure of a digital product", "The internet speed", "A new keyboard"],
+                            answer: "The basic structure of a digital product"
+                        }
+                    ]
+                },
+                {
+                    week: 4,
+                    title: "Digital Responsibility",
+                    focus: "Build safe, smart digital habits",
+                    goals: [
+                        "Understand cybersecurity basics",
+                        "Use technology responsibly",
+                        "Practice safe online behaviour"
+                    ],
+                    tasks: [
+                        "Learn about passwords, privacy, and safe browsing",
+                        "Create a personal digital safety checklist",
+                        "Review how to avoid scams and unsafe links"
+                    ],
+                    learn: [
+                        "Why passwords matter",
+                        "How to stay safe online",
+                        "The role of privacy and respect in digital spaces"
+                    ],
+                    recommendations: [
+                        "Use strong passwords and different passwords for important accounts",
+                        "Never share personal information with strangers online",
+                        "Practice responsible online communication"
+                    ],
+                    studyGuide: [
+                        "Review common online risks and safe responses",
+                        "Discuss why privacy matters in school and personal life",
+                        "Create a digital ethics checklist for personal use"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why should you use a strong password?",
+                            options: ["To look busy", "To protect your account from unauthorised access", "To make your computer faster", "To stop websites loading"],
+                            answer: "To protect your account from unauthorised access"
+                        },
+                        {
+                            question: "What is a safe online habit?",
+                            options: ["Sharing passwords with friends", "Checking before clicking unknown links", "Posting personal details publicly", "Ignoring privacy settings"],
+                            answer: "Checking before clicking unknown links"
+                        },
+                        {
+                            question: "Why is cybersecurity important?",
+                            options: ["It makes screens brighter", "It protects information and systems", "It removes all online risks", "It only matters for adults"],
+                            answer: "It protects information and systems"
+                        }
+                    ]
+                },
+                {
+                    week: 5,
+                    title: "Career Exploration",
+                    focus: "Connect your skills to future careers",
+                    goals: [
+                        "Research IT and digital careers",
+                        "Notice which tasks you enjoy most",
+                        "Connect your strengths to future pathways"
+                    ],
+                    tasks: [
+                        "Research at least three careers in IT, software, design, or cyber security",
+                        "Compare the skills each role needs",
+                        "Write a short reflection about which path fits you best"
+                    ],
+                    learn: [
+                        "The range of digital career opportunities",
+                        "How different roles require different skills",
+                        "How your interests can shape your future study choices"
+                    ],
+                    recommendations: [
+                        "Talk to a teacher or careers adviser about digital subjects",
+                        "Look at course pathways from Year 10 onward",
+                        "Research job roles and training routes"
+                    ],
+                    studyGuide: [
+                        "Compare course entry requirements",
+                        "Look at local training providers and university options",
+                        "Review what kind of skill-building you need next"
+                    ],
+                    quiz: [
+                        {
+                            question: "Which role is most linked to protecting computer systems?",
+                            options: ["Cybersecurity analyst", "Chef", "Artist", "Librarian"],
+                            answer: "Cybersecurity analyst"
+                        },
+                        {
+                            question: "Why is researching career options useful?",
+                            options: ["It makes your time shorter", "It helps you match skills to a future path", "It replaces school work", "It only helps adults"],
+                            answer: "It helps you match skills to a future path"
+                        },
+                        {
+                            question: "What is a good way to explore digital careers?",
+                            options: ["Avoid all research", "Talk to people, read course information, and try projects", "Only use one website", "Wait until after school"],
+                            answer: "Talk to people, read course information, and try projects"
+                        }
+                    ]
+                },
+                {
+                    week: 6,
+                    title: "Action Plan",
+                    focus: "Turn your interest into a next-step plan",
+                    goals: [
+                        "Set a realistic study goal",
+                        "Choose a short-term action plan",
+                        "Prepare for the next stage of learning"
+                    ],
+                    tasks: [
+                        "Write down your strongest digital skill and one improvement area",
+                        "Create a 6-week action plan for the next term",
+                        "Choose one project you will continue working on"
+                    ],
+                    learn: [
+                        "How to set achievable goals",
+                        "What progress looks like over time",
+                        "How to keep momentum in future learning"
+                    ],
+                    recommendations: [
+                        "Keep a learning journal",
+                        "Build a small project portfolio",
+                        "Review your goals every fortnight"
+                    ],
+                    studyGuide: [
+                        "Write down what you have learned so far",
+                        "Set one short-term goal for next month",
+                        "Identify what study or project you want to do next"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is the best reason to set a study goal?",
+                            options: ["To avoid all learning", "To help you focus and track progress", "To make your timetable longer", "To stop using technology"],
+                            answer: "To help you focus and track progress"
+                        },
+                        {
+                            question: "Why is reflection useful?",
+                            options: ["It helps identify improvements and next steps", "It removes all mistakes", "It stops planning", "It guarantees a job"],
+                            answer: "It helps identify improvements and next steps"
+                        },
+                        {
+                            question: "What should you do after finishing a project?",
+                            options: ["Forget it", "Review what worked and what to improve next", "Delete the files", "Only show it to one person"],
+                            answer: "Review what worked and what to improve next"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        engineering: {
+            name: "Engineering",
+            icon: "⚙️",
+            description: "Engineering could suit your problem-solving skills and interest in designing, building and improving things.",
+            summary: "This path suits students who enjoy solving real-world problems, building systems, and making ideas work in the physical world.",
+            program: [
+                {
+                    week: 1,
+                    title: "Foundations of Problem Solving",
+                    focus: "Build strong thinking skills for engineering",
+                    goals: [
+                        "Improve maths confidence and logic",
+                        "Learn how engineering solves everyday problems",
+                        "Practice structured thinking"
+                    ],
+                    tasks: [
+                        "Review algebra, ratios, and measurement skills",
+                        "Identify a real-world problem and think of a practical solution",
+                        "Try a design challenge such as building the tallest paper tower"
+                    ],
+                    learn: [
+                        "Why maths is central to engineering",
+                        "How to break large problems into smaller steps",
+                        "How design and testing improve solutions"
+                    ],
+                    recommendations: [
+                        "Use maths practice worksheets and challenge questions",
+                        "Try simple engineering tasks at home using cardboard, tape, or LEGO",
+                        "Watch short videos about design and invention"
+                    ],
+                    studyGuide: [
+                        "Review fractions, measurement, and algebra basics",
+                        "Practice explaining how a solution works in simple steps",
+                        "Keep a record of design ideas and results"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why is maths important in engineering?",
+                            options: ["It helps design and test solutions", "It is only used in games", "It replaces teamwork", "It makes machines heavier"],
+                            answer: "It helps design and test solutions"
+                        },
+                        {
+                            question: "What is the best way to solve a complex engineering problem?",
+                            options: ["Ignore the problem", "Break it into smaller parts", "Guess without testing", "Wait for someone else"],
+                            answer: "Break it into smaller parts"
+                        },
+                        {
+                            question: "What is a prototype?",
+                            options: ["A final product", "An early version of a design used for testing", "A maths book", "A type of machine"],
+                            answer: "An early version of a design used for testing"
+                        }
+                    ]
+                },
+                {
+                    week: 2,
+                    title: "Science and Materials",
+                    focus: "Understand how things work",
+                    goals: [
+                        "Improve physics and science thinking",
+                        "Compare materials and strengths",
+                        "Learn how force and structure affect design"
+                    ],
+                    tasks: [
+                        "Test which material is strongest for a small challenge",
+                        "Explore simple machines like levers, pulleys, or gears",
+                        "Record what changed when you altered a design"
+                    ],
+                    learn: [
+                        "How materials behave under force",
+                        "What makes structures stable and strong",
+                        "How simple machines reduce effort"
+                    ],
+                    recommendations: [
+                        "Build small models and test what changes their strength",
+                        "Research how bridges or towers are designed",
+                        "Keep notes about what works and what fails"
+                    ],
+                    studyGuide: [
+                        "Review force, motion, and energy basics",
+                        "Compare materials like cardboard, wood, plastic, and metal",
+                        "Look at real examples of engineering structures"
+                    ],
+                    quiz: [
+                        {
+                            question: "What do engineers test in a prototype?",
+                            options: ["Whether it works and how it can improve", "Only the colour", "Only the cost", "Only the size"],
+                            answer: "Whether it works and how it can improve"
+                        },
+                        {
+                            question: "Why do engineers compare materials?",
+                            options: ["To choose the strongest and most suitable option", "Because they all perform the same", "To make designs heavier", "To avoid testing"],
+                            answer: "To choose the strongest and most suitable option"
+                        },
+                        {
+                            question: "What is a lever?",
+                            options: ["A simple machine that helps lift or move objects", "A kind of engine", "A scientific instrument", "A type of measurement"],
+                            answer: "A simple machine that helps lift or move objects"
+                        }
+                    ]
+                },
+                {
+                    week: 3,
+                    title: "Design Challenges",
+                    focus: "Turn ideas into working models",
+                    goals: [
+                        "Create a design brief",
+                        "Build a simple model",
+                        "Reflect on how to improve it"
+                    ],
+                    tasks: [
+                        "Create a design brief for a product or structure",
+                        "Build a first version of your idea",
+                        "Test it and make at least two improvements"
+                    ],
+                    learn: [
+                        "How prototyping supports design improvement",
+                        "How to evaluate a solution against a goal",
+                        "The value of trial and revision"
+                    ],
+                    recommendations: [
+                        "Try small design competitions or STEM activities",
+                        "Use a checklist to review what works and what does not",
+                        "Show your work to a teacher or family member for feedback"
+                    ],
+                    studyGuide: [
+                        "Sketch your design before building it",
+                        "List materials, purpose, and constraints",
+                        "Test and improve after each version"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is a design brief?",
+                            options: ["A list of goals and requirements for a project", "A tool for drawing only", "A way to stop questioning", "A final grade"],
+                            answer: "A list of goals and requirements for a project"
+                        },
+                        {
+                            question: "Why test a prototype?",
+                            options: ["To prove it is good before using it", "To avoid all improvements", "To make it look new", "To skip planning"],
+                            answer: "To prove it is good before using it"
+                        },
+                        {
+                            question: "What should happen after a test?",
+                            options: ["Improve the design if needed", "Throw it away immediately", "Ignore the results", "Stop all thinking"],
+                            answer: "Improve the design if needed"
+                        }
+                    ]
+                },
+                {
+                    week: 4,
+                    title: "STEM and Innovation",
+                    focus: "Explore how engineering grows through science and technology",
+                    goals: [
+                        "Understand connections between science, tech, and engineering",
+                        "Explore careers in engineering fields",
+                        "Build curiosity about innovation"
+                    ],
+                    tasks: [
+                        "Research one engineering field such as civil, mechanical, or electrical",
+                        "Find a famous invention or engineer and learn their process",
+                        "Write a short reflection on what area interests you most"
+                    ],
+                    learn: [
+                        "How different engineering fields connect to everyday life",
+                        "How inventions grow from curiosity and testing",
+                        "How communication helps engineers work together"
+                    ],
+                    recommendations: [
+                        "Watch engineering documentaries or science explainers",
+                        "Visit a local engineering or STEM event if available",
+                        "Research subjects you will need in senior years"
+                    ],
+                    studyGuide: [
+                        "Compare engineering careers and pathways",
+                        "Learn the difference between design, construction, and testing",
+                        "Identify what subjects support your goal"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is one role of an engineer?",
+                            options: ["To invent and improve systems and products", "To only write essays", "To sell books", "To avoid science"],
+                            answer: "To invent and improve systems and products"
+                        },
+                        {
+                            question: "Why are engineering careers varied?",
+                            options: ["Because engineers work in many fields and solve different problems", "Because they all do the same job", "Because engineering has no science", "Because all problems are simple"],
+                            answer: "Because engineers work in many fields and solve different problems"
+                        },
+                        {
+                            question: "What is a good way to learn about engineering?",
+                            options: ["Read about real projects and test simple designs", "Avoid all practical work", "Only use one textbook", "Ignore career information"],
+                            answer: "Read about real projects and test simple designs"
+                        }
+                    ]
+                },
+                {
+                    week: 5,
+                    title: "Career Readiness",
+                    focus: "Connect your skills to real pathways",
+                    goals: [
+                        "Research engineering study pathways",
+                        "Create evidence of your interest",
+                        "Plan next academic steps"
+                    ],
+                    tasks: [
+                        "Research university, TAFE, or apprenticeship options",
+                        "Find out which senior subjects support engineering pathways",
+                        "Add your design project to a portfolio or folder"
+                    ],
+                    learn: [
+                        "How study pathways connect to careers",
+                        "How to build a profile of interest and skill",
+                        "What subjects and activities help future applications"
+                    ],
+                    recommendations: [
+                        "Speak with a careers advisor or STEM teacher",
+                        "Explore internships, work experience, and clubs",
+                        "Keep evidence of projects you completed"
+                    ],
+                    studyGuide: [
+                        "Review course entry requirements",
+                        "List your strongest subjects and project evidence",
+                        "Set one realistic next step for senior study"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why do students build a portfolio?",
+                            options: ["To show evidence of skills and interests", "To skip learning", "To avoid teachers", "To replace all subjects"],
+                            answer: "To show evidence of skills and interests"
+                        },
+                        {
+                            question: "What should you research before choosing a pathway?",
+                            options: ["Only your favourite sports", "Study requirements, roles, and future opportunities", "Only holidays", "Only school timetable"],
+                            answer: "Study requirements, roles, and future opportunities"
+                        },
+                        {
+                            question: "What is a good senior step for engineering?",
+                            options: ["Strong maths and science subjects", "Only art", "Only English", "Avoiding all practical work"],
+                            answer: "Strong maths and science subjects"
+                        }
+                    ]
+                },
+                {
+                    week: 6,
+                    title: "Your Engineering Action Plan",
+                    focus: "Turn your interest into progression",
+                    goals: [
+                        "Set a realistic next-term goal",
+                        "Choose a clear focus area",
+                        "Keep growing your engineering mindset"
+                    ],
+                    tasks: [
+                        "Write a personal action plan for the next 3 months",
+                        "Choose one engineering area to explore deeper",
+                        "Plan how you will improve one skill every week"
+                    ],
+                    learn: [
+                        "How to sustain momentum over time",
+                        "How to turn curiosity into consistent effort",
+                        "How to keep improving after learning a concept"
+                    ],
+                    recommendations: [
+                        "Keep a project folder and learning journal",
+                        "Aim for progress, not perfection",
+                        "Celebrate completed milestones"
+                    ],
+                    studyGuide: [
+                        "Set three SMART goals for the next term",
+                        "Review your strongest project and the improvement you want next",
+                        "Choose a pathway action to keep moving forward"
+                    ],
+                    quiz: [
+                        {
+                            question: "What helps you keep progressing in engineering?",
+                            options: ["Consistent practice and reflection", "Only finishing one task", "Avoiding all feedback", "Ignoring mistakes"],
+                            answer: "Consistent practice and reflection"
+                        },
+                        {
+                            question: "Why is it useful to set goals?",
+                            options: ["To keep your effort focused and measurable", "To skip all effort", "To make learning longer", "To avoid tracking"],
+                            answer: "To keep your effort focused and measurable"
+                        },
+                        {
+                            question: "What should you do after a challenge?",
+                            options: ["Reflect and improve your approach", "Give up instantly", "Stop all future projects", "Only compare with others"],
+                            answer: "Reflect and improve your approach"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        health: {
+            name: "Medicine & Health",
+            icon: "🩺",
+            description: "You may enjoy helping people and could explore medicine, nursing, pharmacy, physiotherapy and other health careers.",
+            summary: "This path is a strong match if you care about people, teamwork, and making a positive difference in everyday life and wellbeing.",
+            program: [
+                {
+                    week: 1,
+                    title: "Health Foundations",
+                    focus: "Understand wellbeing and how people stay healthy",
+                    goals: [
+                        "Learn basic health concepts",
+                        "Build empathy and communication skills",
+                        "See how health connects to daily life"
+                    ],
+                    tasks: [
+                        "Research what a healthy lifestyle includes",
+                        "Discuss how habits affect physical and mental wellbeing",
+                        "Write a short reflection about how people support others"
+                    ],
+                    learn: [
+                        "What healthy living involves",
+                        "How people support one another in healthcare",
+                        "Why communication matters in helping roles"
+                    ],
+                    recommendations: [
+                        "Read short articles about health and wellbeing",
+                        "Talk to a school nurse, teacher, or mentor if available",
+                        "Volunteer or help with a community activity"
+                    ],
+                    studyGuide: [
+                        "Review basic human body systems",
+                        "Learn key terms like wellbeing, prevention, and care",
+                        "Reflect on how kindness and communication support health"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is wellbeing?",
+                            options: ["Only being physically strong", "A balance of physical, mental, and social health", "Only eating healthy food", "Only sleeping well"],
+                            answer: "A balance of physical, mental, and social health"
+                        },
+                        {
+                            question: "Why is communication important in health careers?",
+                            options: ["It helps people understand care and support", "It is not needed", "It only matters in office jobs", "It makes medicine unnecessary"],
+                            answer: "It helps people understand care and support"
+                        },
+                        {
+                            question: "Which habit supports health?",
+                            options: ["Regular sleep", "Ignoring stress", "Smoking", "Skipping food all day"],
+                            answer: "Regular sleep"
+                        }
+                    ]
+                },
+                {
+                    week: 2,
+                    title: "Human Body and Science",
+                    focus: "Build biological understanding",
+                    goals: [
+                        "Strengthen science skills",
+                        "Learn key body systems",
+                        "See how science informs healthcare"
+                    ],
+                    tasks: [
+                        "Study one body system such as the circulatory or respiratory system",
+                        "Create a labelled diagram or summary",
+                        "Explain how the system supports health"
+                    ],
+                    learn: [
+                        "Main body systems and functions",
+                        "How health problems can affect the body",
+                        "How science supports diagnosis and treatment"
+                    ],
+                    recommendations: [
+                        "Use biology videos and diagrams",
+                        "Practise note-taking and explaining simple systems",
+                        "Ask questions about what you find interesting"
+                    ],
+                    studyGuide: [
+                        "Review key parts of the body and their functions",
+                        "Learn basic scientific vocabulary",
+                        "Relate body systems to everyday health"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does the respiratory system do?",
+                            options: ["Moves blood around the body", "Helps the body breathe and exchange gases", "Controls memory", "Creates muscles"],
+                            answer: "Helps the body breathe and exchange gases"
+                        },
+                        {
+                            question: "Why is biology important in health careers?",
+                            options: ["It helps explain how the body works", "It is only for doctors", "It is not useful", "It replaces all care"],
+                            answer: "It helps explain how the body works"
+                        },
+                        {
+                            question: "What is one way a healthy body system supports wellbeing?",
+                            options: ["By helping the body function properly", "By making disease worse", "By making sleep unnecessary", "By removing all health concerns"],
+                            answer: "By helping the body function properly"
+                        }
+                    ]
+                },
+                {
+                    week: 3,
+                    title: "Care and Compassion",
+                    focus: "Build the human side of health work",
+                    goals: [
+                        "Practice empathy and active listening",
+                        "Understand how care supports people",
+                        "Improve communication skills"
+                    ],
+                    tasks: [
+                        "Role-play a supportive conversation",
+                        "Write a short response to a health scenario",
+                        "Reflect on how trust and kindness help people feel safe"
+                    ],
+                    learn: [
+                        "How empathy supports patients and clients",
+                        "Why listening matters in healthcare",
+                        "How communication helps reduce fear and confusion"
+                    ],
+                    recommendations: [
+                        "Practise conversations with family or friends",
+                        "Join service activities or mentoring opportunities",
+                        "Learn how healthcare workers support people emotionally"
+                    ],
+                    studyGuide: [
+                        "Review how people respond to stress and support",
+                        "Practise using calm, respectful communication",
+                        "Reflect on what makes a supportive environment"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why is empathy important in healthcare?",
+                            options: ["It helps people feel heard and supported", "It makes treatment unnecessary", "It only helps in school", "It is the same as being loud"],
+                            answer: "It helps people feel heard and supported"
+                        },
+                        {
+                            question: "What does active listening involve?",
+                            options: ["Paying close attention and responding thoughtfully", "Talking over the other person", "Ignoring feelings", "Only focusing on facts"],
+                            answer: "Paying close attention and responding thoughtfully"
+                        },
+                        {
+                            question: "How can kindness affect a patient or client?",
+                            options: ["It can make them feel more comfortable and understood", "It has no impact", "It increases fear", "It replaces treatment"],
+                            answer: "It can make them feel more comfortable and understood"
+                        }
+                    ]
+                },
+                {
+                    week: 4,
+                    title: "Prevention and Safety",
+                    focus: "Look at how health is protected before problems grow",
+                    goals: [
+                        "Understand prevention in healthcare",
+                        "Learn about safe choices and health habits",
+                        "See how education supports long-term wellbeing"
+                    ],
+                    tasks: [
+                        "Research one prevention strategy such as vaccinations, exercise, or nutrition",
+                        "Investigate why early action matters",
+                        "Create a poster or checklist showing healthy habits"
+                    ],
+                    learn: [
+                        "How prevention can reduce illness and injury",
+                        "Why healthy routines matter",
+                        "How health education supports communities"
+                    ],
+                    recommendations: [
+                        "Read about public health campaigns",
+                        "Learn about healthy routines and safety measures",
+                        "Discuss health habits with people around you"
+                    ],
+                    studyGuide: [
+                        "Review how prevention supports health over time",
+                        "Understand the difference between prevention and treatment",
+                        "Use examples from family, school, and community health"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does prevention mean in health?",
+                            options: ["Taking action before a problem gets worse", "Waiting until a problem is severe", "Avoiding all health information", "Only taking medicine"],
+                            answer: "Taking action before a problem gets worse"
+                        },
+                        {
+                            question: "Why are healthy habits important?",
+                            options: ["They reduce risk and support long-term wellbeing", "They have no effect", "They only help adults", "They replace sleep"],
+                            answer: "They reduce risk and support long-term wellbeing"
+                        },
+                        {
+                            question: "What is one example of prevention?",
+                            options: ["Regular exercise", "Ignoring symptoms", "Only seeing a doctor after severe illness", "Skipping meals"],
+                            answer: "Regular exercise"
+                        }
+                    ]
+                },
+                {
+                    week: 5,
+                    title: "Career Exploration",
+                    focus: "Research health pathways and roles",
+                    goals: [
+                        "Explore healthcare roles",
+                        "Compare courses and responsibilities",
+                        "Decide which health path suits your strengths"
+                    ],
+                    tasks: [
+                        "Research at least three careers in health",
+                        "Write down the subjects, skills, and qualities each role needs",
+                        "Reflect on which role matches your interests"
+                    ],
+                    learn: [
+                        "Different healthcare careers and responsibilities",
+                        "How study and training pathways vary",
+                        "How personal strengths connect to health roles"
+                    ],
+                    recommendations: [
+                        "Talk with a school counsellor or careers adviser",
+                        "Explore public health, therapy, nursing, and medicine pathways",
+                        "Look for work experience or shadowing options"
+                    ],
+                    studyGuide: [
+                        "Compare roles like nurse, doctor, physiotherapist, psychologist, and pharmacist",
+                        "Review subject needs for senior study",
+                        "Look at how skills like empathy and teamwork matter"
+                    ],
+                    quiz: [
+                        {
+                            question: "Which role usually focuses on helping people recover movement and strength?",
+                            options: ["Physiotherapist", "Chef", "Mechanic", "Designer"],
+                            answer: "Physiotherapist"
+                        },
+                        {
+                            question: "Why is it useful to research health careers?",
+                            options: ["It helps you match your strengths to a future path", "It is only for adults", "It makes the decision final", "It removes all subjects"],
+                            answer: "It helps you match your strengths to a future path"
+                        },
+                        {
+                            question: "What should you compare when exploring a career?",
+                            options: ["Role responsibilities, subjects, and training pathways", "Only the salary", "Only the office colour", "Only social media posts"],
+                            answer: "Role responsibilities, subjects, and training pathways"
+                        }
+                    ]
+                },
+                {
+                    week: 6,
+                    title: "Your Health Action Plan",
+                    focus: "Turn interest into a long-term plan",
+                    goals: [
+                        "Set a realistic goal for health learning",
+                        "Choose a next step for study or volunteering",
+                        "Build confidence that you can grow in this path"
+                    ],
+                    tasks: [
+                        "Write a personal plan for what you will improve next term",
+                        "Choose one area you want to learn more about in health",
+                        "Create a list of actions and dates for progress"
+                    ],
+                    learn: [
+                        "How to keep momentum with a health pathway",
+                        "How to use current strengths as a base",
+                        "How to turn caring interests into long-term action"
+                    ],
+                    recommendations: [
+                        "Keep a learning journal of what you have discovered",
+                        "Volunteer in a supportive or community role if possible",
+                        "Review your plan every two weeks"
+                    ],
+                    studyGuide: [
+                        "Write your strongest health-related skill and one growth area",
+                        "Set three short-term goals",
+                        "Identify the next course or subject you need to explore"
+                    ],
+                    quiz: [
+                        {
+                            question: "What makes a good action plan?",
+                            options: ["Clear goals, realistic steps, and review dates", "No deadlines", "Only one vague idea", "Only short-term thinking"],
+                            answer: "Clear goals, realistic steps, and review dates"
+                        },
+                        {
+                            question: "Why review progress regularly?",
+                            options: ["It helps you see growth and adjust goals", "It is only for teachers", "It creates stress", "It removes effort"],
+                            answer: "It helps you see growth and adjust goals"
+                        },
+                        {
+                            question: "What should you do if you want to grow in a health pathway?",
+                            options: ["Keep learning, explore opportunities, and build skills", "Stop learning and wait", "Only focus on one exam", "Ignore all support"],
+                            answer: "Keep learning, explore opportunities, and build skills"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        creative: {
+            name: "Creative Arts & Design",
+            icon: "🎨",
+            description: "Your creativity could lead toward graphic design, architecture, animation, media, fashion or other creative careers.",
+            summary: "This path is best for students who enjoy storytelling, design, visual expression, and creating work that people connect with emotionally.",
+            program: [
+                {
+                    week: 1,
+                    title: "Creative Thinking",
+                    focus: "Build confidence in personal expression",
+                    goals: [
+                        "Develop creative habits",
+                        "Learn to observe ideas and inspiration",
+                        "Create a simple design or visual response"
+                    ],
+                    tasks: [
+                        "Draw, doodle, or create a visual moodboard from everyday objects",
+                        "Write down three ideas you find inspiring",
+                        "Create a simple design or poster theme"
+                    ],
+                    learn: [
+                        "How creativity starts with observation",
+                        "How design choices affect meaning",
+                        "How to turn ideas into visible work"
+                    ],
+                    recommendations: [
+                        "Keep a sketchbook or idea journal",
+                        "Look at design, art, and media examples for inspiration",
+                        "Try experimenting with colour, shapes, and layout"
+                    ],
+                    studyGuide: [
+                        "Look closely at objects, patterns, and colours around you",
+                        "Practice drawing from life and memory",
+                        "Notice how design communicates mood or feeling"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does creativity often begin with?",
+                            options: ["Observation and ideas", "Only copying others", "Avoiding art", "Only using one colour"],
+                            answer: "Observation and ideas"
+                        },
+                        {
+                            question: "Why are sketches useful?",
+                            options: ["They help turn ideas into visual plans", "They always finish the work", "They replace all research", "They are only for teachers"],
+                            answer: "They help turn ideas into visual plans"
+                        },
+                        {
+                            question: "What can design communicate?",
+                            options: ["Mood, meaning, and emotion", "Only numbers", "Only silence", "Only paper size"],
+                            answer: "Mood, meaning, and emotion"
+                        }
+                    ]
+                },
+                {
+                    week: 2,
+                    title: "Visual Communication",
+                    focus: "Learn how design impacts people",
+                    goals: [
+                        "Understand design basics",
+                        "Practice composition and layout",
+                        "Improve visual communication"
+                    ],
+                    tasks: [
+                        "Create a simple flyer, poster, or social media graphic",
+                        "Experiment with spacing, colour, and type",
+                        "Review what makes an image clear and engaging"
+                    ],
+                    learn: [
+                        "How layout and colour guide attention",
+                        "Why strong visuals are easy to understand",
+                        "How design choices influence meaning"
+                    ],
+                    recommendations: [
+                        "Use design tools like Canva or simple editing apps",
+                        "Study magazine covers, posters, and logos",
+                        "Practise creating a simple composition each week"
+                    ],
+                    studyGuide: [
+                        "Learn about balance, contrast, and hierarchy",
+                        "Look at how purpose changes design choices",
+                        "Practise organising information clearly"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does contrast help do in design?",
+                            options: ["Guide attention and create clarity", "Remove all colour", "Make text unreadable", "Replace ideas"],
+                            answer: "Guide attention and create clarity"
+                        },
+                        {
+                            question: "Why is layout important?",
+                            options: ["It helps organise information clearly", "It is only for posters", "It makes every design the same", "It removes creativity"],
+                            answer: "It helps organise information clearly"
+                        },
+                        {
+                            question: "What can colour help communicate?",
+                            options: ["Mood and meaning", "Only a website background", "Only a single font", "Only one emotion"],
+                            answer: "Mood and meaning"
+                        }
+                    ]
+                },
+                {
+                    week: 3,
+                    title: "Storytelling and Media",
+                    focus: "Understand how creative work tells a message",
+                    goals: [
+                        "Explore storytelling in design, media, and visual work",
+                        "Practise communicating ideas clearly",
+                        "Create a short media concept"
+                    ],
+                    tasks: [
+                        "Build a short story or creative concept around a theme",
+                        "Turn it into a storyboard, poster, or video idea",
+                        "Explain what emotions or messages you want to share"
+                    ],
+                    learn: [
+                        "How stories shape meaning",
+                        "How media communicates ideas to audiences",
+                        "Why creative purpose matters"
+                    ],
+                    recommendations: [
+                        "Watch short animations, films, or adverts and discuss what works",
+                        "Create micro-storyboards and moodboards",
+                        "Use storytelling to support design choices"
+                    ],
+                    studyGuide: [
+                        "Study the beginning, middle, and end of a story",
+                        "Look at how characters, setting, and message work together",
+                        "Use simple narrative planning for your projects"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does storytelling in design help do?",
+                            options: ["Communicate a message or emotion clearly", "Only show text", "Eliminate emotion", "Avoid planning"],
+                            answer: "Communicate a message or emotion clearly"
+                        },
+                        {
+                            question: "Why is a storyboard useful?",
+                            options: ["It helps plan visual ideas in order", "It replaces all design tools", "It is only for writing", "It prevents all feedback"],
+                            answer: "It helps plan visual ideas in order"
+                        },
+                        {
+                            question: "What does a media creator need to think about?",
+                            options: ["Audience, message, and impact", "Only timing", "Only sound", "Only one colour"],
+                            answer: "Audience, message, and impact"
+                        }
+                    ]
+                },
+                {
+                    week: 4,
+                    title: "Portfolio Practice",
+                    focus: "Build a body of creative work",
+                    goals: [
+                        "Create a small personal portfolio",
+                        "Select your strongest work",
+                        "Learn to present ideas clearly"
+                    ],
+                    tasks: [
+                        "Choose at least three pieces of your work",
+                        "Arrange them in a neat digital or physical folder",
+                        "Write short explanations of your process and goals"
+                    ],
+                    learn: [
+                        "How to present creative work professionally",
+                        "Why showing process matters as much as the final product",
+                        "How to talk about your own ideas"
+                    ],
+                    recommendations: [
+                        "Collect your best work in one place",
+                        "Focus on quality and improvement, not quantity",
+                        "Ask for feedback from teachers or friends"
+                    ],
+                    studyGuide: [
+                        "Review your strongest pieces and explain why they work",
+                        "Reflect on what you want to improve next",
+                        "Practise describing your creative process clearly"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why build a portfolio?",
+                            options: ["To show your creative growth and abilities", "To avoid all criticism", "To replace all school projects", "To limit your ideas"],
+                            answer: "To show your creative growth and abilities"
+                        },
+                        {
+                            question: "What makes a portfolio stronger?",
+                            options: ["Clear presentation and thoughtful choices", "Using only one type of work", "No explanations", "Making everything the same"],
+                            answer: "Clear presentation and thoughtful choices"
+                        },
+                        {
+                            question: "Why is reflection useful in creative work?",
+                            options: ["It helps you understand what works and what to improve", "It removes all mistakes", "It makes work less personal", "It avoids feedback"],
+                            answer: "It helps you understand what works and what to improve"
+                        }
+                    ]
+                },
+                {
+                    week: 5,
+                    title: "Career Exploration",
+                    focus: "Connect creative skills to real pathways",
+                    goals: [
+                        "Research creative careers",
+                        "Understand course options",
+                        "Map your interests to a creative future"
+                    ],
+                    tasks: [
+                        "Research careers in design, media, fashion, architecture, or animation",
+                        "Compare the skills and study pathways for each",
+                        "Write a short reflection about which creative area interests you most"
+                    ],
+                    learn: [
+                        "How creative careers vary by industry",
+                        "Why training and portfolio building matter",
+                        "How to connect your interests to a pathway"
+                    ],
+                    recommendations: [
+                        "Look at course pages and examples of creative portfolios",
+                        "Talk to art or design teachers about subject choices",
+                        "Explore local creative industries and talent pathways"
+                    ],
+                    studyGuide: [
+                        "Compare different creative roles and their requirements",
+                        "Look at how portfolios are used in creative industries",
+                        "Choose a direction that matches your strengths"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why should you research creative careers?",
+                            options: ["To match your interests to possible future paths", "To avoid all subjects", "To choose a single colour", "To remove personal style"],
+                            answer: "To match your interests to possible future paths"
+                        },
+                        {
+                            question: "What matters in many creative careers?",
+                            options: ["A strong portfolio and clear communication", "Only memorising facts", "Only theory without practice", "Only speed"],
+                            answer: "A strong portfolio and clear communication"
+                        },
+                        {
+                            question: "Which creative field is linked to visual communication?",
+                            options: ["Graphic design", "Chemistry", "Medicine", "Engineering"],
+                            answer: "Graphic design"
+                        }
+                    ]
+                },
+                {
+                    week: 6,
+                    title: "Creative Growth Plan",
+                    focus: "Turn creativity into a long-term strategy",
+                    goals: [
+                        "Set one creative goal for the term",
+                        "Plan weekly practice",
+                        "Keep growing your creative identity"
+                    ],
+                    tasks: [
+                        "Write a personal creative development plan",
+                        "Choose one project or skill you want to improve",
+                        "Set dates for your next creative challenge"
+                    ],
+                    learn: [
+                        "How creative growth becomes stronger with regular effort",
+                        "How to use feedback and reflection effectively",
+                        "How to build confidence in your own voice"
+                    ],
+                    recommendations: [
+                        "Keep a portfolio folder and collection of ideas",
+                        "Continue making something small every week",
+                        "Review your progress and set the next milestone"
+                    ],
+                    studyGuide: [
+                        "Choose a daily or weekly creative habit",
+                        "Write what you want to improve next",
+                        "Review the strongest work you made and what you want to build next"
+                    ],
+                    quiz: [
+                        {
+                            question: "What helps creative growth over time?",
+                            options: ["Regular practice and reflection", "Only waiting for inspiration", "Avoiding all feedback", "Ignoring personal style"],
+                            answer: "Regular practice and reflection"
+                        },
+                        {
+                            question: "Why should you review your work?",
+                            options: ["To see what is working and what to improve", "To stop making art", "To hide mistakes", "To remove all ideas"],
+                            answer: "To see what is working and what to improve"
+                        },
+                        {
+                            question: "What is a strong next step for a creative student?",
+                            options: ["Keep creating, collecting work, and exploring a pathway", "Do no further projects", "Only copy famous work", "Ignore feedback"],
+                            answer: "Keep creating, collecting work, and exploring a pathway"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        business: {
+            name: "Business & Management",
+            icon: "💼",
+            description: "You may enjoy leadership, organisation, money and entrepreneurship.",
+            summary: "This path fits students who enjoy leadership, numbers, communication, teamwork, and turning ideas into real opportunities.",
+            program: [
+                {
+                    week: 1,
+                    title: "Business Foundations",
+                    focus: "Understand how organisations work",
+                    goals: [
+                        "Learn basic business ideas",
+                        "Understand how products and services create value",
+                        "Practice organised thinking"
+                    ],
+                    tasks: [
+                        "Research a local business and explain what it sells",
+                        "List what makes a business successful",
+                        "Create a simple business idea for a school or community need"
+                    ],
+                    learn: [
+                        "What a business does and why it exists",
+                        "How customers, products, and services connect",
+                        "Why organisation matters in business"
+                    ],
+                    recommendations: [
+                        "Look at successful businesses and how they operate",
+                        "Use project planning tools for ideas",
+                        "Try a small fundraising or service initiative"
+                    ],
+                    studyGuide: [
+                        "Learn business terms like product, customer, and value",
+                        "Compare different local businesses and their purpose",
+                        "Map simple ideas from problem to possible solution"
+                    ],
+                    quiz: [
+                        {
+                            question: "What does a business create or provide?",
+                            options: ["A product or service to meet a need", "Only a logo", "Only a website", "Only a schedule"],
+                            answer: "A product or service to meet a need"
+                        },
+                        {
+                            question: "Why do businesses study customers?",
+                            options: ["To understand what people need and want", "To avoid teamwork", "To stop selling", "To remove all planning"],
+                            answer: "To understand what people need and want"
+                        },
+                        {
+                            question: "What is one key skill in business?",
+                            options: ["Organisation", "Only drawing", "Only sleeping", "Only coding"],
+                            answer: "Organisation"
+                        }
+                    ]
+                },
+                {
+                    week: 2,
+                    title: "Money and Planning",
+                    focus: "Explore how money and planning affect decisions",
+                    goals: [
+                        "Understand simple financial decisions",
+                        "Practice planning and budgeting",
+                        "Look at how value is created"
+                    ],
+                    tasks: [
+                        "Create a simple budget for a school event or personal goal",
+                        "Compare costs and benefits of different choices",
+                        "Learn how prices and value are linked"
+                    ],
+                    learn: [
+                        "Why budgets matter",
+                        "How planning supports good decision making",
+                        "What costs and profits mean in business"
+                    ],
+                    recommendations: [
+                        "Use a weekly budget worksheet",
+                        "Discuss how money choices affect goals",
+                        "Look at examples of small business planning"
+                    ],
+                    studyGuide: [
+                        "Review basic money concepts like income, cost, and profit",
+                        "Practise calculating simple costs and outcomes",
+                        "Relate these ideas to school projects or community ideas"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why do businesses plan a budget?",
+                            options: ["To manage money and resources carefully", "To waste time", "To ignore costs", "To avoid planning"],
+                            answer: "To manage money and resources carefully"
+                        },
+                        {
+                            question: "What is profit?",
+                            options: ["Money left after costs are paid", "A type of product", "A school subject", "A business logo"],
+                            answer: "Money left after costs are paid"
+                        },
+                        {
+                            question: "Why is planning useful in business?",
+                            options: ["It helps actions match goals and resources", "It makes all ideas the same", "It removes the need for effort", "It stops customers needing products"],
+                            answer: "It helps actions match goals and resources"
+                        }
+                    ]
+                },
+                {
+                    week: 3,
+                    title: "Leadership and Teamwork",
+                    focus: "Build the people skills behind successful business",
+                    goals: [
+                        "Improve communication and teamwork",
+                        "Understand what leadership looks like",
+                        "Practise organising group work"
+                    ],
+                    tasks: [
+                        "Take part in a group project with assigned roles",
+                        "Write down how teamwork helps a goal succeed",
+                        "Reflect on what strong leadership looks like"
+                    ],
+                    learn: [
+                        "How leaders support teams",
+                        "Why communication matters in business",
+                        "How shared roles help goals get done"
+                    ],
+                    recommendations: [
+                        "Join leadership or student team roles",
+                        "Practise presenting and speaking clearly",
+                        "Review how group tasks are organised"
+                    ],
+                    studyGuide: [
+                        "Learn about communication, delegation, and responsibility",
+                        "Reflect on times when group tasks worked well",
+                        "Think about how leaders motivate people"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why is teamwork important in business?",
+                            options: ["Because many goals are achieved through combined effort", "Because it removes responsibility", "Because only one person matters", "Because customers are not needed"],
+                            answer: "Because many goals are achieved through combined effort"
+                        },
+                        {
+                            question: "What does leadership involve?",
+                            options: ["Guiding people, organising tasks, and making plans", "Avoiding decisions", "Only following others", "Ignoring communication"],
+                            answer: "Guiding people, organising tasks, and making plans"
+                        },
+                        {
+                            question: "Why is communication important in teams?",
+                            options: ["It helps people understand goals and responsibilities", "It makes work longer", "It prevents all mistakes", "It removes the need to plan"],
+                            answer: "It helps people understand goals and responsibilities"
+                        }
+                    ]
+                },
+                {
+                    week: 4,
+                    title: "Marketing and Ideas",
+                    focus: "Learn how products and messages connect with people",
+                    goals: [
+                        "Understand basic marketing ideas",
+                        "See how brands connect with customers",
+                        "Practice presenting an idea clearly"
+                    ],
+                    tasks: [
+                        "Create a simple product pitch or slogan",
+                        "Research one brand and explain why people like it",
+                        "Design a basic advertisement for a school idea"
+                    ],
+                    learn: [
+                        "How marketing communicates value",
+                        "Why customer needs matter",
+                        "How good messaging makes ideas memorable"
+                    ],
+                    recommendations: [
+                        "Look at adverts and branding examples",
+                        "Practise presenting ideas in a clear and persuasive way",
+                        "Ask what makes a message interesting and memorable"
+                    ],
+                    studyGuide: [
+                        "Discuss the relationship between product, audience, and message",
+                        "Review what attracts people to a product or brand",
+                        "Practise a short pitch using clear language"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is marketing mainly about?",
+                            options: ["Communicating value to customers", "Only making a logo", "Only buying products", "Only writing invoices"],
+                            answer: "Communicating value to customers"
+                        },
+                        {
+                            question: "Why is a clear message important?",
+                            options: ["It helps customers understand the benefit of a product or idea", "It removes the need for planning", "It makes all products identical", "It makes customers unhappy"],
+                            answer: "It helps customers understand the benefit of a product or idea"
+                        },
+                        {
+                            question: "What is a pitch?",
+                            options: ["A short presentation of an idea", "A type of account", "A school timetable", "A balance sheet"],
+                            answer: "A short presentation of an idea"
+                        }
+                    ]
+                },
+                {
+                    week: 5,
+                    title: "Career Exploration",
+                    focus: "Look at business and management pathways",
+                    goals: [
+                        "Research business-related careers",
+                        "Understand roles in management, finance, marketing, and entrepreneurship",
+                        "Match strengths to future pathways"
+                    ],
+                    tasks: [
+                        "Research at least three business-related careers",
+                        "Compare the skills needed for each role",
+                        "Write a short reflection on the path most interesting to you"
+                    ],
+                    learn: [
+                        "How different business jobs connect to leadership and organisation",
+                        "How interests in numbers, people, or ideas can shape business careers",
+                        "How senior subject choices can support future goals"
+                    ],
+                    recommendations: [
+                        "Talk to a careers adviser or business teacher",
+                        "Look at course options in commerce, economics, or management",
+                        "Research pathways in entrepreneurship, marketing, or finance"
+                    ],
+                    studyGuide: [
+                        "Compare different business pathways",
+                        "Review which roles involve communication, numbers, or strategy",
+                        "Choose the role that best matches your interests"
+                    ],
+                    quiz: [
+                        {
+                            question: "Which area is most linked to leadership?",
+                            options: ["Management", "Biology", "Design", "Engineering"],
+                            answer: "Management"
+                        },
+                        {
+                            question: "Why is researching careers useful?",
+                            options: ["It helps you match strengths and interests to possible futures", "It replaces all school subjects", "It makes all jobs the same", "It removes decision-making"],
+                            answer: "It helps you match strengths and interests to possible futures"
+                        },
+                        {
+                            question: "What is entrepreneurship?",
+                            options: ["Creating and running a business idea", "Only investing in shares", "Only working in retail", "Only studying maths"],
+                            answer: "Creating and running a business idea"
+                        }
+                    ]
+                },
+                {
+                    week: 6,
+                    title: "Business Growth Plan",
+                    focus: "Turn your ideas into a realistic next step",
+                    goals: [
+                        "Set business-related goals",
+                        "Choose a personal path forward",
+                        "Keep developing skills in organisation and leadership"
+                    ],
+                    tasks: [
+                        "Write your personal action plan for the next term",
+                        "Choose one business skill to improve",
+                        "Reflect on how your ideas could become a real project"
+                    ],
+                    learn: [
+                        "How to stay motivated as you build skills",
+                        "How to track improvement over time",
+                        "How to turn an idea into practical action"
+                    ],
+                    recommendations: [
+                        "Keep notes about your ideas and progress",
+                        "Review your goals every two weeks",
+                        "Take part in leadership or fundraising experiences"
+                    ],
+                    studyGuide: [
+                        "Write down one business skill to strengthen",
+                        "Set a short-term goal with dates",
+                        "Review one project you want to keep developing"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why is reflection useful in business learning?",
+                            options: ["It helps you improve decisions and identify progress", "It removes the need for effort", "It only matters for adults", "It avoids all mistakes"],
+                            answer: "It helps you improve decisions and identify progress"
+                        },
+                        {
+                            question: "What is a strong business habit?",
+                            options: ["Planning, organising, and reviewing results", "Avoiding all decisions", "Ignoring customers", "Only following one idea"],
+                            answer: "Planning, organising, and reviewing results"
+                        },
+                        {
+                            question: "How can a student begin building a business path?",
+                            options: ["By learning key skills, researching roles, and trying small projects", "By waiting until final year", "By avoiding all tasks", "By only listening to one opinion"],
+                            answer: "By learning key skills, researching roles, and trying small projects"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        science: {
+            name: "Science & Research",
+            icon: "🔬",
+            description: "Your curiosity could lead toward biology, chemistry, physics, environmental science and research.",
+            summary: "This path suits students who love asking questions, investigating ideas, and discovering how the world works through evidence and experiment.",
+            program: [
+                {
+                    week: 1,
+                    title: "Scientific Thinking",
+                    focus: "Build curiosity and evidence-based reasoning",
+                    goals: [
+                        "Practice asking good scientific questions",
+                        "Understand the role of evidence",
+                        "Improve observation skills"
+                    ],
+                    tasks: [
+                        "Choose a question such as how plants grow or what affects temperature",
+                        "Observe and record what you notice",
+                        "Write a short prediction and reason for it"
+                    ],
+                    learn: [
+                        "How scientists ask questions and test ideas",
+                        "Why observation matters",
+                        "How predictions and evidence connect"
+                    ],
+                    recommendations: [
+                        "Use simple science experiments at home or school",
+                        "Keep a note of observations and results",
+                        "Watch short explainers about scientific inquiry"
+                    ],
+                    studyGuide: [
+                        "Review what a question, hypothesis, and observation are",
+                        "Practise writing clear predictions",
+                        "Compare what you expected with what happened"
+                    ],
+                    quiz: [
+                        {
+                            question: "What is a hypothesis?",
+                            options: ["A testable idea or prediction", "A final answer", "A school rule", "A list of supplies"],
+                            answer: "A testable idea or prediction"
+                        },
+                        {
+                            question: "Why do scientists observe carefully?",
+                            options: ["To gather evidence and make better conclusions", "To avoid writing notes", "To speed up every experiment", "To make every question simple"],
+                            answer: "To gather evidence and make better conclusions"
+                        },
+                        {
+                            question: "What does evidence help do?",
+                            options: ["Support or challenge a scientific idea", "Replace all questions", "Create confusion", "Stop experiments"],
+                            answer: "Support or challenge a scientific idea"
+                        }
+                    ]
+                },
+                {
+                    week: 2,
+                    title: "Experiments and Evidence",
+                    focus: "Learn how to test ideas carefully",
+                    goals: [
+                        "Design a simple experiment",
+                        "Measure and record results",
+                        "Understand how accurate data helps conclusions"
+                    ],
+                    tasks: [
+                        "Set up a simple experiment with one change at a time",
+                        "Measure results in a table or chart",
+                        "Explain what you learned from the evidence"
+                    ],
+                    learn: [
+                        "Why one change at a time matters",
+                        "How to record accurate data",
+                        "How evidence helps build a conclusion"
+                    ],
+                    recommendations: [
+                        "Use a notebook or spreadsheet to record results",
+                        "Try small experiments with plants, water, or temperature",
+                        "Look for patterns in what changes happen"
+                    ],
+                    studyGuide: [
+                        "Review measurement and data recording basics",
+                        "Learn how to compare results and explain patterns",
+                        "Discuss what variables are and why they matter"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why should experiments change only one thing at a time?",
+                            options: ["So the results are easier to understand", "Because it is faster", "Because it is more expensive", "Because all variables are the same"],
+                            answer: "So the results are easier to understand"
+                        },
+                        {
+                            question: "What is data?",
+                            options: ["Information collected during an observation or experiment", "Only a science book", "A type of equipment", "A final conclusion"],
+                            answer: "Information collected during an observation or experiment"
+                        },
+                        {
+                            question: "What should you do with results?",
+                            options: ["Review them to see patterns and draw conclusions", "Ignore them", "Throw them away", "Only keep the first one"],
+                            answer: "Review them to see patterns and draw conclusions"
+                        }
+                    ]
+                },
+                {
+                    week: 3,
+                    title: "Scientific Communication",
+                    focus: "Explain what you discovered clearly",
+                    goals: [
+                        "Write scientific explanations",
+                        "Use diagrams or models to show thinking",
+                        "Communicate findings clearly"
+                    ],
+                    tasks: [
+                        "Create a short science report for one experiment",
+                        "Include results, conclusion, and what you learned",
+                        "Use a labelled diagram if helpful"
+                    ],
+                    learn: [
+                        "How clear explanations support scientific understanding",
+                        "How to make evidence easy to follow",
+                        "How to compare evidence and conclusion"
+                    ],
+                    recommendations: [
+                        "Use simple headings for aim, method, results, and conclusion",
+                        "Practise explaining science in everyday language",
+                        "Ask a teacher to check your report"
+                    ],
+                    studyGuide: [
+                        "Review how to structure a scientific explanation",
+                        "Practise using diagrams to support ideas",
+                        "Write summaries that connect evidence with explanation"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why is a science report useful?",
+                            options: ["It helps explain what was observed and what it means", "It avoids evidence", "It makes experiments longer", "It removes curiosity"],
+                            answer: "It helps explain what was observed and what it means"
+                        },
+                        {
+                            question: "What should a good conclusion include?",
+                            options: ["What the result shows and whether the idea was supported", "Only the date", "Only a title", "Only a final guess"],
+                            answer: "What the result shows and whether the idea was supported"
+                        },
+                        {
+                            question: "Why use a diagram in science?",
+                            options: ["To make complex ideas easier to understand", "To stop all writing", "To replace all evidence", "To reduce observation"],
+                            answer: "To make complex ideas easier to understand"
+                        }
+                    ]
+                },
+                {
+                    week: 4,
+                    title: "Fields of Science",
+                    focus: "Explore where your curiosity fits",
+                    goals: [
+                        "Research areas like biology, chemistry, physics, and environmental science",
+                        "See how each field answers different questions",
+                        "Find the topics you enjoy most"
+                    ],
+                    tasks: [
+                        "Research one field of science and explain its focus",
+                        "Find a real-world problem connected to that field",
+                        "Compare the ways different sciences investigate the world"
+                    ],
+                    learn: [
+                        "How scientific fields differ and overlap",
+                        "How research connects to everyday problems",
+                        "How your interests can point to long-term study options"
+                    ],
+                    recommendations: [
+                        "Look at science careers and fields of study",
+                        "Follow simple science news stories or documentaries",
+                        "Try projects that connect a field to a real-world issue"
+                    ],
+                    studyGuide: [
+                        "Review what biology, chemistry, physics, and environmental science study",
+                        "Notice how scientific questions connect to real-world issues",
+                        "Ask which scientific questions you are most curious about"
+                    ],
+                    quiz: [
+                        {
+                            question: "Which field studies living things?",
+                            options: ["Biology", "Accounting", "Art", "Literature"],
+                            answer: "Biology"
+                        },
+                        {
+                            question: "What does environmental science focus on?",
+                            options: ["How people and ecosystems interact with the environment", "Only numbers", "Only paperwork", "Only social media"],
+                            answer: "How people and ecosystems interact with the environment"
+                        },
+                        {
+                            question: "Why compare different fields of science?",
+                            options: ["To find the area that best matches your curiosity and strengths", "To stop all questions", "To remove evidence", "To ignore real-world problems"],
+                            answer: "To find the area that best matches your curiosity and strengths"
+                        }
+                    ]
+                },
+                {
+                    week: 5,
+                    title: "Research and Careers",
+                    focus: "Connect science to future pathways",
+                    goals: [
+                        "Research science-related careers",
+                        "Understand study requirements",
+                        "Build a science pathway plan"
+                    ],
+                    tasks: [
+                        "Research science careers such as environmental scientist, lab technician, chemical engineer, or researcher",
+                        "Compare the skills and qualifications required",
+                        "Write a short reflection about the pathway that interests you most"
+                    ],
+                    learn: [
+                        "How science connects to work and research",
+                        "How subjects in senior years shape future options",
+                        "How curiosity can become a career goal"
+                    ],
+                    recommendations: [
+                        "Talk to a science teacher or careers adviser",
+                        "Look at courses and career profiles in science",
+                        "Attend science fairs or events when possible"
+                    ],
+                    studyGuide: [
+                        "Review future pathways in science and technology",
+                        "List the subjects and qualities needed for each option",
+                        "Choose what still needs exploration"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why research science careers?",
+                            options: ["To match your interests with future study and work", "To avoid all science subjects", "To stop asking questions", "To remove curiosity"],
+                            answer: "To match your interests with future study and work"
+                        },
+                        {
+                            question: "Which skill is important in science careers?",
+                            options: ["Analytical thinking and evidence-based reasoning", "Only memorising without understanding", "Only using one device", "Only speaking quickly"],
+                            answer: "Analytical thinking and evidence-based reasoning"
+                        },
+                        {
+                            question: "What can a student do to prepare for a science pathway?",
+                            options: ["Build scientific thinking through questions, experiments, and subject choices", "Wait until final year", "Ignore practical work", "Avoid all research"],
+                            answer: "Build scientific thinking through questions, experiments, and subject choices"
+                        }
+                    ]
+                },
+                {
+                    week: 6,
+                    title: "Science Growth Plan",
+                    focus: "Turn curiosity into a steady learning plan",
+                    goals: [
+                        "Set a realistic science goal",
+                        "Choose a study habit to keep improving",
+                        "Prepare for the next stage of learning"
+                    ],
+                    tasks: [
+                        "Write a 3-month science progression plan",
+                        "Choose one science topic you want to deepen",
+                        "Review what you have learned and what you want to do next"
+                    ],
+                    learn: [
+                        "How long-term learning begins with small actions",
+                        "How to recognise progress in scientific thinking",
+                        "How to keep curiosity alive through consistent effort"
+                    ],
+                    recommendations: [
+                        "Keep a science journal",
+                        "Set one experiment or project for each month",
+                        "Review your goals regularly and adapt when needed"
+                    ],
+                    studyGuide: [
+                        "Write down your strongest science skill and one improvement area",
+                        "Select one next-step experiment or topic",
+                        "Plan how you will keep exploring questions"
+                    ],
+                    quiz: [
+                        {
+                            question: "Why set science goals?",
+                            options: ["To focus your learning and measure progress", "To avoid all questions", "To remove curiosity", "To stop experiments"],
+                            answer: "To focus your learning and measure progress"
+                        },
+                        {
+                            question: "Why is reflection important in science learning?",
+                            options: ["It helps you understand what you learned and what to improve", "It replaces all evidence", "It removes the need to ask questions", "It only matters for exams"],
+                            answer: "It helps you understand what you learned and what to improve"
+                        },
+                        {
+                            question: "What should a science student do after learning a concept?",
+                            options: ["Apply it, test it, and explore the next question", "Forget it immediately", "Avoid all real-world examples", "Ignore feedback"],
+                            answer: "Apply it, test it, and explore the next question"
+                        }
+                    ]
+                }
+            ]
+        }
+
+    };
+
+
+    const sorted = Object.keys(scores)
+        .sort((a, b) => scores[b] - scores[a]);
+
+    let selectedCareer = null;
+    let topCareers = sorted.slice(0, 3);
+
+    function renderCareerCards() {
+        const grid = document.getElementById("careerGrid");
+        grid.innerHTML = "";
+
+        topCareers.forEach((career, index) => {
+            const data = careers[career];
+            const card = document.createElement("div");
+            const chosen = selectedCareer === career;
+
+            card.className = "career-card" + (chosen ? " selected" : "");
+
+            card.innerHTML = `
+
+                <div class="career-icon">
+                    ${data.icon}
+                </div>
+
+                <h3>${data.name}</h3>
+
+                <p>${data.description}</p>
+
+                <span class="match">
+
+                    ${
+                        index === 0
+                        ? "Best Match"
+                        : index === 1
+                        ? "Strong Match"
+                        : "Good Match"
+                    }
+
+                </span>
+
+                <button type="button" class="path-select-btn ${chosen ? "selected" : ""}" data-career="${career}">
+                    ${chosen ? "Selected Path" : "Choose This Path"}
+                </button>
+
+            `;
+
+            const button = card.querySelector(".path-select-btn");
+            button.addEventListener("click", function () {
+                selectedCareer = career;
+                renderCareerCards();
+                showCareerPlan(career);
+            });
+
+            grid.appendChild(card);
+        });
+    }
+
+    function renderPathTrack(pathKey, plan) {
+        const pathProgress = document.getElementById("pathProgress");
+        const pathSteps = document.getElementById("pathSteps");
+        const progress = getPathProgress(pathKey);
+        const completedWeeks = progress.completedWeeks || [];
+
+        updateProgressDashboard(pathKey, plan.program);
+
+        pathSteps.innerHTML = plan.program.map((week, index) => {
+            const isUnlocked = index === 0 || completedWeeks.includes(plan.program[index - 1].week);
+            const isComplete = completedWeeks.includes(week.week);
+            const lockMessage = isUnlocked ? "" : `Complete Week ${plan.program[index - 1].week} to unlock this week.`;
+
+            return `
+                <div class="week-card ${!isUnlocked ? 'locked' : ''}">
+                    <div class="week-header">
+                        <div>
+                            <span class="week-pill">Week ${week.week}</span>
+                            <h4>${week.title}</h4>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <button type="button" class="week-toggle-btn" data-index="${index}">${isUnlocked ? 'Open' : 'Locked'}</button>
+                            <button type="button" class="path-select-btn ${isComplete ? 'selected' : ''}" data-week-complete="${week.week}" data-week-unlock="${isUnlocked}">
+                                ${isComplete ? 'Completed' : 'Mark Complete'}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="week-content ${(isUnlocked && index === 0) || isUnlocked ? '' : 'hidden'}" data-week-content="${index}">
+                        ${!isUnlocked ? `<div class="week-panel" style="margin:16px; background:#fff3f3; border-color:#f6d7d7; color:#8d2e2e; padding:16px; border-radius:12px;">${lockMessage}</div>` : `
+                            <div class="week-grid">
+                                <div class="week-panel">
+                                    <h5>Goals</h5>
+                                    <ul>${week.goals.map(goal => `<li>${goal}</li>`).join("")}</ul>
+                                </div>
+                                <div class="week-panel">
+                                    <h5>What to do</h5>
+                                    <ul>${week.tasks.map(task => `<li>${task}</li>`).join("")}</ul>
+                                </div>
+                                <div class="week-panel">
+                                    <h5>What to learn</h5>
+                                    <ul>${week.learn.map(item => `<li>${item}</li>`).join("")}</ul>
+                                </div>
+                            </div>
+
+                            <div class="recommendations">
+                                <h5>Recommendations</h5>
+                                <ul>${week.recommendations.map(item => `<li>${item}</li>`).join("")}</ul>
+                            </div>
+
+                            <div class="study-guide">
+                                <h5>Study Guide</h5>
+                                <ul>${week.studyGuide.map(item => `<li>${item}</li>`).join("")}</ul>
+                            </div>
+
+                            <div class="quiz-block">
+                                <h5>Mini Test</h5>
+                                ${week.quiz.map((question, qIndex) => `
+                                    <div class="quiz-question">
+                                        <p>${qIndex + 1}. ${question.question}</p>
+                                        <div class="quiz-options">
+                                            ${question.options.map(option => `
+                                                <button class="quiz-option" type="button" data-answer="${option}" data-correct="${option === question.answer}">${option}</button>
+                                            `).join("")}
+                                        </div>
+                                        <div class="quiz-feedback"></div>
+                                    </div>
+                                `).join("")}
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        document.querySelectorAll(".week-toggle-btn").forEach((button) => {
+            button.addEventListener("click", function () {
+                const index = Number(this.dataset.index);
+                const panel = document.querySelector(`[data-week-content="${index}"]`);
+                const unlocked = !document.querySelectorAll(".week-card")[index].classList.contains("locked");
+
+                if (!unlocked) {
+                    return;
+                }
+
+                const isHidden = panel.classList.contains("hidden");
+                panel.classList.toggle("hidden", !isHidden);
+                button.textContent = isHidden ? "Close" : "Open";
+            });
+        });
+
+        document.querySelectorAll("[data-week-complete]").forEach((button) => {
+            button.addEventListener("click", function () {
+                const weekNumber = Number(this.dataset.weekComplete);
+                const unlocked = this.dataset.weekUnlock === "true";
+
+                if (!unlocked) {
+                    return;
+                }
+
+                toggleWeekCompletion(pathKey, weekNumber);
+            });
+        });
+
+        document.querySelectorAll(".quiz-option").forEach((option) => {
+            option.addEventListener("click", function () {
+                const optionButtons = this.parentElement.querySelectorAll(".quiz-option");
+                const isCorrect = this.dataset.correct === "true";
+                const feedback = this.parentElement.parentElement.querySelector(".quiz-feedback");
+
+                optionButtons.forEach((btn) => {
+                    btn.disabled = true;
+                    btn.classList.remove("correct", "wrong");
+                    if (btn.dataset.correct === "true") {
+                        btn.classList.add("correct");
+                    }
+                    if (btn === this && !isCorrect) {
+                        btn.classList.add("wrong");
+                    }
+                });
+
+                feedback.textContent = isCorrect ? "Correct! You understand this concept." : `Not quite. The correct answer is: ${this.parentElement.parentElement.querySelector('.quiz-option[data-correct="true"]').textContent}`;
+                feedback.style.color = isCorrect ? "#0d6b42" : "#9b2c2c";
+            });
+        });
+    }
+
+    function showCareerPlan(careerKey) {
+        const plan = careers[careerKey];
+        const pathPlan = document.getElementById("pathPlan");
+        const selectedPathName = document.getElementById("selectedPathName");
+        const selectedPathSummary = document.getElementById("selectedPathSummary");
+
+        programLookup[careerKey] = plan;
+        selectedPathName.textContent = `${plan.name} Pathway`;
+        selectedPathSummary.textContent = `You are currently in Year 9, and this plan helps you move from your current stage to a future in ${plan.name.toLowerCase()}. ${plan.summary}`;
+
+        renderPathTrack(careerKey, plan);
+
+        pathPlan.style.display = "block";
+        pathPlan.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+    }
+
+    selectedCareer = topCareers[0];
+    renderCareerCards();
+    showCareerPlan(selectedCareer);
+
+    resultsSection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* RESTART QUIZ */
+
+function restartQuiz() {
+
+    resultsSection.style.display = "none";
+
+    quizSection.style.display = "block";
+
+    currentQuestion = 0;
+
+    answers = [];
+
+    showQuestion();
+
+    quizSection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+updateAuthUI();
+
+</script>
+
+</body>
+</html>
