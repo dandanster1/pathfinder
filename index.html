@@ -71,6 +71,64 @@
         margin-left: 15px;
     }
 
+    .admin-panel {
+        display: none;
+        padding: 45px 8%;
+        background: #fff8e8;
+        border-top: 1px solid #f0dfb2;
+    }
+
+    .admin-panel.show {
+        display: block;
+    }
+
+    .admin-content {
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .admin-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .admin-stat {
+        background: white;
+        border: 1px solid #f0dfb2;
+        border-radius: 12px;
+        padding: 18px;
+    }
+
+    .admin-stat strong {
+        display: block;
+        font-size: 28px;
+        color: #8a5a00;
+        margin-top: 6px;
+    }
+
+    .admin-users {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .admin-users th,
+    .admin-users td {
+        padding: 12px 14px;
+        text-align: left;
+        border-bottom: 1px solid #f1ead9;
+        font-size: 14px;
+    }
+
+    .admin-users th {
+        color: #8a5a00;
+        background: #fffdf7;
+    }
+
     .auth-modal {
         position: fixed;
         inset: 0;
@@ -832,6 +890,15 @@
         .quiz-container {
             padding: 25px;
         }
+
+        .admin-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-users {
+            display: block;
+            overflow-x: auto;
+        }
     }
 
 </style>
@@ -853,6 +920,9 @@
         <a href="#results">Courses</a>
         <a href="#about">About Us</a>
         <span id="userStatus" class="user-pill" style="display:none;"></span>
+        <button id="adminBtn" class="nav-btn" type="button" onclick="toggleAdminPanel()" style="display:none; background:#b7791f;">
+            Admin
+        </button>
         <button id="navAuthBtn" class="nav-btn" type="button" onclick="openLoginModal()">
             Log In
         </button>
@@ -895,6 +965,22 @@
         </button>
     </div>
 </div>
+
+<section id="adminPanel" class="admin-panel" aria-label="Admin dashboard">
+    <div class="admin-content">
+        <h2>Usage Dashboard</h2>
+        <p>Accounts and activity recorded in this browser.</p>
+        <div class="admin-summary">
+            <div class="admin-stat">People who signed up<strong id="adminUserCount">0</strong></div>
+            <div class="admin-stat">People who started<strong id="adminStartedCount">0</strong></div>
+            <div class="admin-stat">Completed quizzes<strong id="adminCompletedCount">0</strong></div>
+        </div>
+        <table class="admin-users">
+            <thead><tr><th>Name</th><th>Email</th><th>Last active</th><th>Quiz</th></tr></thead>
+            <tbody id="adminUserRows"></tbody>
+        </table>
+    </div>
+</section>
 
 
 <!-- HERO SECTION -->
@@ -1143,7 +1229,7 @@
 
 <script>
 (function() {
-    const version = 'pathfinder-v2026-08-21-1';
+    const version = 'pathfinder-v2026-08-24-1';
     const url = new URL(window.location.href);
     if (url.searchParams.get('v') !== version) {
         url.searchParams.set('v', version);
@@ -1271,15 +1357,43 @@ const authSubtitle = document.getElementById("authSubtitle");
 const authModeToggle = document.getElementById("authModeToggle");
 const navAuthBtn = document.getElementById("navAuthBtn");
 const userStatus = document.getElementById("userStatus");
+const adminBtn = document.getElementById("adminBtn");
+const adminPanel = document.getElementById("adminPanel");
+const ADMIN_EMAIL = "dandanster@gmail.com";
 let currentAuthMode = "signup";
+
+function isAdminUser(user) {
+    return Boolean(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL);
+}
 
 function getUsers() {
     const users = localStorage.getItem("pathfinderUsers");
-    return users ? JSON.parse(users) : [];
+    if (!users) return [];
+
+    try {
+        const parsedUsers = JSON.parse(users);
+        return Array.isArray(parsedUsers)
+            ? parsedUsers.filter(user => user && user.email && user.password)
+            : [];
+    } catch (error) {
+        localStorage.removeItem("pathfinderUsers");
+        return [];
+    }
 }
 
 function saveUsers(users) {
     localStorage.setItem("pathfinderUsers", JSON.stringify(users));
+}
+
+function updateUserActivity(email, activity) {
+    const users = getUsers();
+    const user = users.find(item => item.email === email);
+    if (!user) return;
+
+    user.lastActive = new Date().toISOString();
+    if (activity === "started") user.quizStarted = true;
+    if (activity === "completed") user.quizCompleted = true;
+    saveUsers(users);
 }
 
 function getCurrentUser() {
@@ -1351,12 +1465,38 @@ function updateAuthUI() {
         userStatus.style.display = "inline-block";
         navAuthBtn.textContent = "Log Out";
         navAuthBtn.setAttribute("onclick", "logoutUser()" );
+        adminBtn.style.display = isAdminUser(currentUser) ? "inline-block" : "none";
     } else {
         userStatus.style.display = "none";
         userStatus.textContent = "";
         navAuthBtn.textContent = "Log In";
         navAuthBtn.setAttribute("onclick", "openLoginModal()" );
+        adminBtn.style.display = "none";
+        adminPanel.classList.remove("show");
     }
+}
+
+function toggleAdminPanel() {
+    const currentUser = getCurrentUser();
+    if (!isAdminUser(currentUser)) return;
+
+    adminPanel.classList.toggle("show");
+    if (adminPanel.classList.contains("show")) renderAdminDashboard();
+}
+
+function renderAdminDashboard() {
+    const users = getUsers().filter(user => user.email !== ADMIN_EMAIL);
+    document.getElementById("adminUserCount").textContent = users.length;
+    document.getElementById("adminStartedCount").textContent = users.filter(user => user.quizStarted).length;
+    document.getElementById("adminCompletedCount").textContent = users.filter(user => user.quizCompleted).length;
+    document.getElementById("adminUserRows").innerHTML = users.map(user => `
+        <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.lastActive ? new Date(user.lastActive).toLocaleString() : "Not yet"}</td>
+            <td>${user.quizCompleted ? "Completed" : user.quizStarted ? "In progress" : "Not started"}</td>
+        </tr>
+    `).join("");
 }
 
 function logoutUser() {
@@ -1402,6 +1542,7 @@ signupForm.addEventListener("submit", function(event) {
     users.push(newUser);
     saveUsers(users);
     setCurrentUser({ name, email: email.toLowerCase() });
+    updateUserActivity(email.toLowerCase(), "signedUp");
 
     closeSignUpModal();
     updateAuthUI();
@@ -1421,15 +1562,19 @@ loginForm.addEventListener("submit", function(event) {
     }
 
     const users = getUsers();
-    const matchedUser = users.find(user => user.email === email && user.password === password);
+    const account = users.find(user => user.email === email);
+    const matchedUser = account && account.password === password ? account : null;
 
     if (!matchedUser) {
-        loginError.textContent = "Incorrect email or password.";
+        loginError.textContent = account
+            ? "Incorrect password. Please try again."
+            : "No account was found with this email. Please sign up first.";
         loginError.classList.add("show");
         return;
     }
 
     setCurrentUser({ name: matchedUser.name, email: matchedUser.email });
+    updateUserActivity(matchedUser.email, "loggedIn");
     closeSignUpModal();
     updateAuthUI();
     alert(`Welcome back, ${matchedUser.name}!`);
@@ -1442,6 +1587,26 @@ let answers = [];
 
 const quizSection = document.getElementById("quiz-section");
 const resultsSection = document.getElementById("results");
+
+function getQuizState() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return null;
+
+    const saved = localStorage.getItem(`pathfinderQuiz_${currentUser.email}`);
+    return saved ? JSON.parse(saved) : null;
+}
+
+function saveQuizState(completed = false) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+
+    localStorage.setItem(`pathfinderQuiz_${currentUser.email}`, JSON.stringify({
+        currentQuestion,
+        answers,
+        completed,
+        updatedAt: new Date().toISOString()
+    }));
+}
 
 
 /* START QUIZ */
@@ -1459,9 +1624,16 @@ function startQuiz() {
 
     resultsSection.style.display = "none";
 
-    currentQuestion = 0;
+    const savedState = getQuizState();
+    currentQuestion = savedState ? Math.min(savedState.currentQuestion || 0, questions.length - 1) : 0;
+    answers = savedState && Array.isArray(savedState.answers) ? savedState.answers : [];
 
-    answers = [];
+    if (savedState && savedState.completed && answers.length === questions.length) {
+        showResults();
+        return;
+    }
+
+    updateUserActivity(getCurrentUser().email, "started");
 
     showQuestion();
 
@@ -1514,6 +1686,7 @@ function showQuestion() {
             div.classList.add("selected");
 
             answers[currentQuestion] = option[1];
+            saveQuizState();
 
         };
 
@@ -1540,6 +1713,8 @@ function nextQuestion() {
 
         currentQuestion++;
 
+        saveQuizState();
+
         showQuestion();
 
     } else {
@@ -1559,6 +1734,8 @@ function previousQuestion() {
 
         currentQuestion--;
 
+        saveQuizState();
+
         showQuestion();
 
     }
@@ -1569,6 +1746,9 @@ function previousQuestion() {
 /* SHOW RESULTS */
 
 function showResults() {
+
+    saveQuizState(true);
+    updateUserActivity(getCurrentUser().email, "completed");
 
     quizSection.style.display = "none";
 
@@ -3689,6 +3869,8 @@ function restartQuiz() {
     currentQuestion = 0;
 
     answers = [];
+
+    saveQuizState(false);
 
     showQuestion();
 
