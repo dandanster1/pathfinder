@@ -89,7 +89,7 @@
 
     .admin-summary {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 15px;
         margin: 20px 0;
     }
@@ -971,6 +971,7 @@
         <h2>Usage Dashboard</h2>
         <p>Accounts and activity recorded in this browser.</p>
         <div class="admin-summary">
+            <div class="admin-stat">Unique visitors<strong id="adminVisitorCount">0</strong></div>
             <div class="admin-stat">People who signed up<strong id="adminUserCount">0</strong></div>
             <div class="admin-stat">People who started<strong id="adminStartedCount">0</strong></div>
             <div class="admin-stat">Completed quizzes<strong id="adminCompletedCount">0</strong></div>
@@ -1385,6 +1386,15 @@ function saveUsers(users) {
     localStorage.setItem("pathfinderUsers", JSON.stringify(users));
 }
 
+function recordVisitor() {
+    if (localStorage.getItem("pathfinderVisitorId")) return;
+
+    const visitorId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem("pathfinderVisitorId", visitorId);
+    const visitorCount = Number(localStorage.getItem("pathfinderVisitorCount") || 0) + 1;
+    localStorage.setItem("pathfinderVisitorCount", String(visitorCount));
+}
+
 function updateUserActivity(email, activity) {
     const users = getUsers();
     const user = users.find(item => item.email === email);
@@ -1486,6 +1496,7 @@ function toggleAdminPanel() {
 
 function renderAdminDashboard() {
     const users = getUsers().filter(user => user.email !== ADMIN_EMAIL);
+    document.getElementById("adminVisitorCount").textContent = localStorage.getItem("pathfinderVisitorCount") || "0";
     document.getElementById("adminUserCount").textContent = users.length;
     document.getElementById("adminStartedCount").textContent = users.filter(user => user.quizStarted).length;
     document.getElementById("adminCompletedCount").textContent = users.filter(user => user.quizCompleted).length;
@@ -3880,6 +3891,7 @@ function restartQuiz() {
 
 }
 
+recordVisitor();
 updateAuthUI();
 
 </script>
