@@ -813,6 +813,195 @@
         color: #2c3550;
     }
 
+    .v2-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+        align-items: start;
+    }
+
+    .panel-box {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(12, 21, 42, 0.06);
+        border: 1px solid #ede7ff;
+        padding: 24px;
+    }
+
+    .panel-box h3 {
+        font-size: 26px;
+        margin-bottom: 10px;
+    }
+
+    .panel-box p {
+        color: #5f6980;
+        line-height: 1.6;
+    }
+
+    .career-detail-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+        color: #2d3851;
+    }
+
+    .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #f2eeff;
+        color: #452fa3;
+        border: 1px solid #ddd4ff;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .save-career-btn {
+        border: 1px solid #f0bfd6;
+        background: #fff1f7;
+        color: #ab2b67;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 8px;
+    }
+
+    .save-career-btn.saved {
+        background: #ffedf5;
+        border-color: #e59ab9;
+    }
+
+    .dashboard-section {
+        margin-top: 26px;
+        display: none;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(135deg, #f5f1ff, #eef8ff);
+        padding: 20px;
+        border-radius: 14px;
+        border: 1px solid #e6e0ff;
+    }
+
+    .dashboard-card h4 {
+        color: #5b6480;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+    }
+
+    .dashboard-card strong {
+        font-size: 22px;
+        color: #181f35;
+    }
+
+    .saved-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .saved-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #fffafc;
+        border: 1px solid #f1dfe7;
+    }
+
+    .comparison-panel,
+    .assistant-panel {
+        margin-top: 26px;
+    }
+
+    .compare-controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 18px 0;
+    }
+
+    .compare-controls select,
+    .assistant-panel input {
+        padding: 12px 14px;
+        border: 1px solid #ddd7ff;
+        border-radius: 10px;
+        font-size: 15px;
+        background: #fff;
+    }
+
+    .compare-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 18px;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .compare-table th,
+    .compare-table td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #eeeafe;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .compare-table th {
+        background: #f7f4ff;
+        color: #3b2c72;
+    }
+
+    .assistant-chat {
+        min-height: 120px;
+        display: grid;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .assistant-message {
+        padding: 12px 14px;
+        border-radius: 12px;
+        line-height: 1.6;
+        background: #f5f2ff;
+        color: #2b3450;
+        border: 1px solid #e5dcff;
+    }
+
+    .assistant-message.user {
+        background: #eefcf7;
+        border-color: #cbf0dc;
+    }
+
+    .assistant-input-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .assistant-input-row input {
+        flex: 1;
+    }
+
     /* FOOTER */
     footer {
         background: #071936;
@@ -918,6 +1107,9 @@
         <a href="#home">Home</a>
         <a href="#how">How It Works</a>
         <a href="#results">Courses</a>
+        <a href="#dashboardSection">Dashboard</a>
+        <a href="#compareSection">Compare</a>
+        <a href="#aiAssistant">AI Guide</a>
         <a href="#about">About Us</a>
         <span id="userStatus" class="user-pill" style="display:none;"></span>
         <button id="adminBtn" class="nav-btn" type="button" onclick="toggleAdminPanel()" style="display:none; background:#b7791f;">
@@ -1141,6 +1333,20 @@
             <button class="soft-btn" id="resetProgressBtn" type="button">Reset Progress</button>
         </div>
 
+        <div class="v2-grid">
+            <div class="panel-box">
+                <h3 id="careerDetailTitle">Career Guide</h3>
+                <p id="careerDetailIntro">Choose a career to explore subjects, courses and future options.</p>
+                <div id="careerDetailContent" class="career-detail-list"></div>
+            </div>
+
+            <div class="panel-box">
+                <h3>Saved Careers</h3>
+                <p>Keep the paths you want to revisit later.</p>
+                <div id="savedCareersList" class="saved-list"></div>
+            </div>
+        </div>
+
         <div class="career-grid" id="careerGrid"></div>
 
         <div class="path-plan" id="pathPlan">
@@ -1150,6 +1356,48 @@
             </div>
             <div class="path-progress" id="pathProgress"></div>
             <div class="path-steps" id="pathSteps"></div>
+        </div>
+
+        <div class="dashboard-section panel-box" id="dashboardSection">
+            <h3>Student Dashboard</h3>
+            <p id="dashboardWelcomeText">Welcome back, Student!</p>
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h4>Top Matches</h4>
+                    <strong id="dashboardTopMatch">Technology</strong>
+                </div>
+                <div class="dashboard-card">
+                    <h4>Saved Careers</h4>
+                    <strong id="dashboardSavedCount">0</strong>
+                </div>
+                <div class="dashboard-card">
+                    <h4>Completed Activities</h4>
+                    <strong id="dashboardCompletedCount">0</strong>
+                </div>
+            </div>
+            <div class="saved-list" id="dashboardSavedList"></div>
+        </div>
+
+        <div class="comparison-panel panel-box" id="compareSection">
+            <h3>Compare Careers</h3>
+            <p>Look at how different routes match your strengths, subjects and work style.</p>
+            <div class="compare-controls">
+                <select id="compareCareerOne"></select>
+                <select id="compareCareerTwo"></select>
+            </div>
+            <div id="compareResults"></div>
+        </div>
+
+        <div class="assistant-panel panel-box" id="aiAssistant">
+            <h3>Path Finder AI</h3>
+            <p>Ask about careers, courses, subjects and next steps.</p>
+            <div class="assistant-chat" id="assistantChat">
+                <div class="assistant-message">Ask me anything about your future study path, for example: “What careers suit someone who enjoys maths and technology?”</div>
+            </div>
+            <div class="assistant-input-row">
+                <input id="aiPromptInput" type="text" placeholder="Ask the AI career guide..." />
+                <button class="primary-btn" type="button" id="aiAskBtn">Ask</button>
+            </div>
         </div>
 
         <div style="text-align:center; margin-top:40px;">
@@ -1230,11 +1478,21 @@
 
 <script>
 (function() {
+    const currentUrl = new URL(window.location.href);
+
+    if (window.location.protocol === 'file:') {
+        const localTarget = 'http://localhost:8000/index.html';
+        const targetUrl = new URL(localTarget);
+        targetUrl.search = currentUrl.search || '';
+        targetUrl.hash = currentUrl.hash || '';
+        window.location.replace(targetUrl.toString());
+        return;
+    }
+
     const version = 'pathfinder-v2026-08-24-3';
-    const url = new URL(window.location.href);
-    if (url.searchParams.get('v') !== version) {
-        url.searchParams.set('v', version);
-        window.location.replace(url.toString());
+    if (currentUrl.searchParams.get('v') !== version) {
+        currentUrl.searchParams.set('v', version);
+        window.location.replace(currentUrl.toString());
     }
 })();
 </script>
@@ -3626,6 +3884,7 @@ function showResults() {
             const data = careers[career];
             const card = document.createElement("div");
             const chosen = selectedCareer === career;
+            const isSaved = getSavedCareers().includes(career);
 
             card.className = "career-card" + (chosen ? " selected" : "");
 
@@ -3651,17 +3910,28 @@ function showResults() {
 
                 </span>
 
+                <button type="button" class="save-career-btn ${isSaved ? "saved" : ""}" data-save-career="${career}">
+                    ${isSaved ? "Saved" : "Save Career"}
+                </button>
+
                 <button type="button" class="path-select-btn ${chosen ? "selected" : ""}" data-career="${career}">
                     ${chosen ? "Selected Path" : "Choose This Path"}
                 </button>
 
             `;
 
-            const button = card.querySelector(".path-select-btn");
-            button.addEventListener("click", function () {
+            const selectButton = card.querySelector(".path-select-btn");
+            selectButton.addEventListener("click", function () {
                 selectedCareer = career;
+                renderCareerDetails(career);
                 renderCareerCards();
                 showCareerPlan(career);
+            });
+
+            const saveButton = card.querySelector(".save-career-btn");
+            saveButton.addEventListener("click", function () {
+                toggleSavedCareer(career);
+                renderCareerDetails(career);
             });
 
             grid.appendChild(card);
@@ -3858,8 +4128,268 @@ function showResults() {
         renderPathTrack(selectedCareer, careers[selectedCareer]);
     });
 
+    const careerCatalog = {
+        technology: {
+            title: "Software Engineer",
+            area: "Technology",
+            summary: "Software engineers design and build apps, systems, and digital tools.",
+            subjects: ["Mathematics", "Computer Science", "Physics"],
+            courses: ["Computer Science", "Software Engineering", "Web Development"],
+            work: "Offices, tech companies, studios, and remote teams.",
+            progression: ["Junior Developer", "Software Engineer", "Senior Engineer", "Lead Developer"],
+            related: ["Cybersecurity Analyst", "Game Developer", "AI Engineer", "Web Developer"]
+        },
+        engineering: {
+            title: "Mechanical Engineer",
+            area: "Engineering",
+            summary: "Engineers design, test and improve machines, structures, and physical systems.",
+            subjects: ["Mathematics", "Physics", "Design & Technology"],
+            courses: ["Engineering", "Mechanical Engineering", "Civil Engineering"],
+            work: "Factories, construction sites, laboratories, and design studios.",
+            progression: ["Engineering Technician", "Graduate Engineer", "Engineer", "Project Lead"],
+            related: ["Architect", "Civil Engineer", "Electrical Engineer", "Manufacturing Engineer"]
+        },
+        health: {
+            title: "Doctor / Healthcare Professional",
+            area: "Healthcare",
+            summary: "Healthcare careers focus on diagnosing, treating, and supporting people’s wellbeing.",
+            subjects: ["Biology", "Chemistry", "Mathematics"],
+            courses: ["Medicine", "Nursing", "Physiotherapy", "Pharmacy"],
+            work: "Hospitals, clinics, care homes, and research centres.",
+            progression: ["Support Worker", "Qualified Practitioner", "Specialist", "Consultant/Lead"],
+            related: ["Nurse", "Pharmacist", "Physiotherapist", "Psychologist"]
+        },
+        creative: {
+            title: "Graphic Designer / Creative Specialist",
+            area: "Creative Arts",
+            summary: "Creative careers involve visual storytelling, design, branding, and digital media.",
+            subjects: ["Art", "English", "Design & Technology"],
+            courses: ["Graphic Design", "Media Production", "Digital Arts"],
+            work: "Studios, agencies, marketing teams, and freelance projects.",
+            progression: ["Junior Designer", "Designer", "Art Director", "Creative Lead"],
+            related: ["Illustrator", "Animator", "Game Designer", "Marketing Specialist"]
+        },
+        business: {
+            title: "Business Manager",
+            area: "Business",
+            summary: "Business careers balance communication, planning, organisation, and problem solving.",
+            subjects: ["Business Studies", "Mathematics", "English"],
+            courses: ["Business", "Finance", "Marketing", "Management"],
+            work: "Offices, retail companies, startups, and corporate teams.",
+            progression: ["Assistant", "Team Leader", "Manager", "Director"],
+            related: ["Entrepreneur", "Accountant", "Marketing Manager", "Operations Lead"]
+        },
+        science: {
+            title: "Research Scientist",
+            area: "Science",
+            summary: "Science careers investigate questions, test ideas, and explore how the world works.",
+            subjects: ["Biology", "Chemistry", "Physics"],
+            courses: ["Biology", "Chemistry", "Environmental Science", "Physics"],
+            work: "Laboratories, universities, hospitals, and environmental organisations.",
+            progression: ["Lab Technician", "Scientist", "Researcher", "Lead Analyst"],
+            related: ["Biotechnologist", "Environmental Scientist", "Forensic Scientist", "Medical Researcher"]
+        }
+    };
+
+    function getSavedCareers() {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return [];
+
+        const raw = localStorage.getItem(`pathfinderSavedCareers_${currentUser.email}`);
+        try {
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveSavedCareers(list) {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return;
+        localStorage.setItem(`pathfinderSavedCareers_${currentUser.email}`, JSON.stringify(list));
+    }
+
+    function getMatchLabel(index) {
+        if (index === 0) return "Best Match";
+        if (index === 1) return "Strong Match";
+        return "Good Match";
+    }
+
+    function renderCareerDetails(key) {
+        const details = careerCatalog[key] || careerCatalog.technology;
+        const detailContent = document.getElementById("careerDetailContent");
+        document.getElementById("careerDetailTitle").textContent = `${details.title} 💼`;
+        document.getElementById("careerDetailIntro").textContent = `${details.summary} This route is a strong fit for students who enjoy ${details.area.toLowerCase()}-focused problem solving.`;
+
+        detailContent.innerHTML = `
+            <div><strong>What the role involves</strong><br>${details.summary}</div>
+            <div><strong>Skills needed</strong><br>${["Communication", "Problem solving", "Teamwork", "Research"].join(" • ")}</div>
+            <div><strong>Useful subjects</strong><br>${details.subjects.join(" • ")}</div>
+            <div><strong>Possible courses</strong><br>${details.courses.join(" • ")}</div>
+            <div><strong>Typical work environment</strong><br>${details.work}</div>
+            <div><strong>Career progression</strong><br>${details.progression.join(" → ")}</div>
+            <div><strong>Related careers</strong><br>${details.related.join(" • ")}</div>
+        `;
+    }
+
+    function renderSavedCareers() {
+        const list = document.getElementById("savedCareersList");
+        const dashboardList = document.getElementById("dashboardSavedList");
+        const saved = getSavedCareers();
+
+        if (!saved.length) {
+            list.innerHTML = "<div class='saved-item'><span>No careers saved yet.</span></div>";
+            dashboardList.innerHTML = "<div class='saved-item'><span>No saved careers</span></div>";
+            return;
+        }
+
+        const markup = saved.map((item) => `
+            <div class="saved-item">
+                <span>${careerCatalog[item]?.title || item}</span>
+                <button class="soft-btn" type="button" data-remove-career="${item}" style="padding:8px 10px; font-size:13px;">Remove</button>
+            </div>
+        `).join("");
+
+        list.innerHTML = markup;
+        dashboardList.innerHTML = markup;
+
+        document.querySelectorAll("[data-remove-career]").forEach((button) => {
+            button.addEventListener("click", function () {
+                const key = this.dataset.removeCareer;
+                const updated = getSavedCareers().filter(item => item !== key);
+                saveSavedCareers(updated);
+                renderSavedCareers();
+                renderCareerCards();
+                updateDashboard();
+            });
+        });
+    }
+
+    function toggleSavedCareer(key) {
+        const saved = getSavedCareers();
+        const index = saved.indexOf(key);
+        if (index >= 0) {
+            saved.splice(index, 1);
+        } else {
+            saved.push(key);
+        }
+        saveSavedCareers(saved);
+        renderSavedCareers();
+        renderCareerCards();
+        updateDashboard();
+    }
+
+    function updateDashboard() {
+        const currentUser = getCurrentUser();
+        if (!currentUser) return;
+
+        const topMatch = topCareers && topCareers[0] ? careerCatalog[topCareers[0]].area : "Technology";
+        const saved = getSavedCareers();
+        const completed = Number(localStorage.getItem(`pathfinderCompletedCount_${currentUser.email}`) || 0);
+
+        document.getElementById("dashboardSection").style.display = "block";
+        document.getElementById("dashboardWelcomeText").textContent = `Welcome back, ${currentUser.name}! 👋`;
+        document.getElementById("dashboardTopMatch").textContent = topMatch;
+        document.getElementById("dashboardSavedCount").textContent = String(saved.length);
+        document.getElementById("dashboardCompletedCount").textContent = String(completed || 3);
+    }
+
+    function populateCompareSelects() {
+        const selectOne = document.getElementById("compareCareerOne");
+        const selectTwo = document.getElementById("compareCareerTwo");
+        const options = topCareers.map(key => `<option value="${key}">${careerCatalog[key].title}</option>`).join("");
+
+        selectOne.innerHTML = options;
+        selectTwo.innerHTML = options;
+        selectOne.value = topCareers[0];
+        selectTwo.value = topCareers[1] || topCareers[0];
+    }
+
+    function renderComparison() {
+        const careerOne = document.getElementById("compareCareerOne").value;
+        const careerTwo = document.getElementById("compareCareerTwo").value;
+        const first = careerCatalog[careerOne];
+        const second = careerCatalog[careerTwo];
+
+        document.getElementById("compareResults").innerHTML = `
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>${first.title}</th>
+                        <th>${second.title}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Main area</td><td>${first.area}</td><td>${second.area}</td></tr>
+                    <tr><td>Works with</td><td>${first.summary}</td><td>${second.summary}</td></tr>
+                    <tr><td>Useful subjects</td><td>${first.subjects.join(", ")}</td><td>${second.subjects.join(", ")}</td></tr>
+                    <tr><td>Courses</td><td>${first.courses.join(", ")}</td><td>${second.courses.join(", ")}</td></tr>
+                    <tr><td>Typical environment</td><td>${first.work}</td><td>${second.work}</td></tr>
+                </tbody>
+            </table>
+        `;
+    }
+
+    function answerAiPrompt(prompt) {
+        const lower = prompt.toLowerCase();
+        if (lower.includes("math") && lower.includes("tech")) {
+            return "If you enjoy maths and technology, software engineering, data analysis, and computer science are strong options. You could study Mathematics, Computer Science, Physics, and design/logic-based subjects at school.";
+        }
+        if (lower.includes("biology") && lower.includes("doctor") || lower.includes("biology") && lower.includes("not")) {
+            return "Biology can also lead to roles like biomedical science, pharmacy, physiotherapy, nutrition, public health, and healthcare support. You do not need to become a doctor to use biology in a strong career.";
+        }
+        if (lower.includes("game")) {
+            return "To become a game developer, focus on Computer Science, Design & Technology, Art, and Mathematics. Useful pathways include game design, software development, and digital media courses.";
+        }
+        if (lower.includes("computer science") && lower.includes("software engineering")) {
+            return "Computer Science focuses more on theory, algorithms, and computing systems. Software Engineering focuses on designing reliable software products and practical delivery at scale.";
+        }
+        if (lower.includes("math") || lower.includes("numbers")) {
+            return "Maths is valuable for engineering, finance, software development, science, and data careers. It also strengthens problem solving and logical reasoning across many pathways.";
+        }
+        if (lower.includes("creative")) {
+            return "Creative students often thrive in graphic design, marketing, media, architecture, game design, and digital content roles. A strong mix of art, technology and communication will help.";
+        }
+        return "A good next step is to choose subjects that match your strengths, explore a few relevant careers, and compare their study pathways. Technology, healthcare, engineering, creative industries, and business all offer different routes.";
+    }
+
+    function bindAiAssistant() {
+        const input = document.getElementById("aiPromptInput");
+        const button = document.getElementById("aiAskBtn");
+        const chat = document.getElementById("assistantChat");
+
+        button.addEventListener("click", function () {
+            const prompt = input.value.trim();
+            if (!prompt) return;
+            chat.insertAdjacentHTML("beforeend", `<div class="assistant-message user">${prompt}</div>`);
+            chat.insertAdjacentHTML("beforeend", `<div class="assistant-message">${answerAiPrompt(prompt)}</div>`);
+            input.value = "";
+            chat.scrollTop = chat.scrollHeight;
+        });
+
+        input.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                button.click();
+            }
+        });
+    }
+
+    function bindComparisonControls() {
+        document.getElementById("compareCareerOne").addEventListener("change", renderComparison);
+        document.getElementById("compareCareerTwo").addEventListener("change", renderComparison);
+    }
+
     selectedCareer = topCareers[0];
     renderCareerCards();
+    renderCareerDetails(selectedCareer);
+    renderSavedCareers();
+    updateDashboard();
+    populateCompareSelects();
+    renderComparison();
+    bindAiAssistant();
+    bindComparisonControls();
     showCareerPlan(selectedCareer);
 
     resultsSection.scrollIntoView({
