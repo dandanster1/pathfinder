@@ -11,6 +11,7 @@ Path Finder is a career and course guidance web app for students, designed to he
 - Career comparison section
 - AI-style career guidance assistant
 - Local account sign-up/login using browser storage
+- Firebase-ready auth support for a real backend when configured
 
 ## Running locally
 
@@ -26,6 +27,13 @@ Then visit:
 ```text
 http://localhost:8000/index.html
 ```
+
+## Firebase setup
+
+1. Create a Firebase project in the Firebase console.
+2. Copy the values into `firebase-config.js`.
+3. Enable Email/Password authentication in Firebase Authentication.
+4. Load the page and sign up normally.
 
 ## GitHub Pages deployment
 

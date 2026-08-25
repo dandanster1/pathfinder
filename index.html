@@ -1476,6 +1476,10 @@
 
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="./firebase-config.js"></script>
+
 <script>
 (function() {
     const currentUrl = new URL(window.location.href);
@@ -1620,6 +1624,24 @@ const adminBtn = document.getElementById("adminBtn");
 const adminPanel = document.getElementById("adminPanel");
 const ADMIN_EMAIL = "dandanster135@gmail.com";
 let currentAuthMode = "signup";
+
+function isFirebaseConfigured() {
+    return Boolean(
+        window.firebaseConfig &&
+        window.firebaseConfig.apiKey &&
+        window.firebaseConfig.apiKey !== "YOUR_API_KEY" &&
+        typeof firebase !== "undefined" &&
+        firebase.apps
+    );
+}
+
+function getFirebaseAuth() {
+    if (!isFirebaseConfigured()) return null;
+    if (!firebase.apps.length) {
+        firebase.initializeApp(window.firebaseConfig);
+    }
+    return firebase.auth();
+}
 
 function isAdminUser(user) {
     return Boolean(user && user.email && user.email.toLowerCase() === ADMIN_EMAIL);
@@ -1769,12 +1791,56 @@ function renderAdminDashboard() {
 }
 
 function logoutUser() {
+    const auth = getFirebaseAuth();
+    if (auth && auth.currentUser) {
+        auth.signOut().catch(() => {});
+    }
     clearCurrentUser();
     updateAuthUI();
     alert("You have been logged out.");
 }
 
-signupForm.addEventListener("submit", function(event) {
+async function handleFirebaseSignup(name, email, password) {
+    const auth = getFirebaseAuth();
+    if (!auth) return false;
+
+    try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const firebaseUser = userCredential.user;
+        setCurrentUser({ name, email: firebaseUser.email.toLowerCase() });
+        updateUserActivity(firebaseUser.email.toLowerCase(), "signedUp");
+        closeSignUpModal();
+        updateAuthUI();
+        alert("Sign up successful! You can now start the quiz.");
+        return true;
+    } catch (error) {
+        authError.textContent = error.message || "Unable to sign up with Firebase.";
+        authError.classList.add("show");
+        return false;
+    }
+}
+
+async function handleFirebaseLogin(email, password) {
+    const auth = getFirebaseAuth();
+    if (!auth) return false;
+
+    try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const firebaseUser = userCredential.user;
+        setCurrentUser({ name: firebaseUser.displayName || "Student", email: firebaseUser.email.toLowerCase() });
+        updateUserActivity(firebaseUser.email.toLowerCase(), "loggedIn");
+        closeSignUpModal();
+        updateAuthUI();
+        alert(`Welcome back, ${firebaseUser.displayName || "Student"}!`);
+        return true;
+    } catch (error) {
+        loginError.textContent = error.message || "Unable to log in.";
+        loginError.classList.add("show");
+        return false;
+    }
+}
+
+signupForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const name = document.getElementById("fullName").value.trim();
@@ -1791,6 +1857,11 @@ signupForm.addEventListener("submit", function(event) {
         authError.textContent = "Password must be at least 6 characters long.";
         authError.classList.add("show");
         return;
+    }
+
+    if (isFirebaseConfigured()) {
+        const firebaseSuccess = await handleFirebaseSignup(name, email.toLowerCase(), password);
+        if (firebaseSuccess) return;
     }
 
     const users = getUsers();
@@ -1818,7 +1889,7 @@ signupForm.addEventListener("submit", function(event) {
     alert("Sign up successful! You can now start the quiz.");
 });
 
-loginForm.addEventListener("submit", function(event) {
+loginForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
     const email = document.getElementById("loginEmail").value.trim().toLowerCase();
@@ -1828,6 +1899,11 @@ loginForm.addEventListener("submit", function(event) {
         loginError.textContent = "Please enter your email and password.";
         loginError.classList.add("show");
         return;
+    }
+
+    if (isFirebaseConfigured()) {
+        const firebaseSuccess = await handleFirebaseLogin(email, password);
+        if (firebaseSuccess) return;
     }
 
     const users = getUsers();
