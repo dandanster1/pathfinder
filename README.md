@@ -6,7 +6,8 @@ Path Finder is a career and course guidance web app for students, designed to he
 
 - Career quiz and matching logic
 - Course and career recommendations
-- Personalised study pathway suggestions
+- Four guided learning paths with short classes, practice activities, and five-question quizzes
+- Class progression unlocks at 80%; learning progress is saved in the browser
 - Saved careers and dashboard tracking
 - Career comparison section
 - AI-style career guidance assistant
@@ -60,4 +61,4 @@ A `.nojekyll` file is included to help ensure the static site is served correctl
 
 ## Notes
 
-This project stores user data in the browser using `localStorage`, which is suitable for a demo or prototype but not for production authentication or real student data.
+This project stores account and learning progress in the browser using `localStorage`, which is suitable for a demo or prototype but not for production authentication or real student data.
